@@ -10,7 +10,7 @@ import javafx.scene.control.Alert;
 import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.Button;
 import javafx.scene.control.TextField;
-import liverary.Shared;
+import liverary.Globals;
 import liverary.controller.GetAccountByUsernameController;
 import liverary.vo.AccountVO;
 
@@ -33,15 +33,32 @@ public class LoginLayout implements Initializable {
 					AlertType.ERROR, "로그인에 실패했습니다. 아이디와 비밀번호를 다시 한 번 확인해주십시오.")).showAndWait();
 			return;
 		}
+		
+		// FOR DEBUG (테스트 후 삭제 요망)
+		if (inputUsername.equals("debug")) {
+			StageManager manager = StageManager.getInstance();
+			try {
+				//manager.switchTo(LayoutsEnum.MainLayout);
+				manager.switchTo(LayoutsEnum.MainTestingLayout);
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+			return;
+		}
+		//
 
 		GetAccountByUsernameController controller = new GetAccountByUsernameController();
 		AccountVO account = controller.exec(inputUsername);
 		
-		
 		if (inputPassword.equals(account.getApassword())) {
-			Shared.setCurrentSession(account);
-			Scene scene = new Scene(Shared.getLayoutMap().get(LayoutsEnum.MainLayout));
-			Shared.getStage().setScene(scene);
+			Globals.setCurrentSession(account);
+			StageManager manager = StageManager.getInstance();
+			
+			try {
+				manager.switchTo(LayoutsEnum.MainLayout);
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
 		} else {
 			(new Alert(
 					AlertType.ERROR, "로그인에 실패했습니다. 아이디와 비밀번호를 다시 한 번 확인해주십시오.")).showAndWait();

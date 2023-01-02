@@ -9,5 +9,6 @@ public enum LayoutsEnum {
 	GetDetailBookInfoLayout, /* 자료관리 - 자료상세조회 */
 	EditBookInfoLayout, /* 자료관리 - 서지사항수정 */
 	RegisterStaffAccountLayout, /* 회원관리 - 직원등록 */
-	EditStaffAccountLayout /* 회원관리 - 직원조회/수정 */
+	EditStaffAccountLayout, /* 회원관리 - 직원조회/수정 */
+	MainTestingLayout
 }

@@ -6,28 +6,15 @@ import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
 import liverary.view.LayoutsEnum;
+import liverary.view.StageManager;
 
 public class Main extends Application {
-	
-	@Override
-	public void init() throws Exception {
-		super.init();
-		
-		Parent parent = FXMLLoader.load(getClass().getResource("view/loginLayoutFXML.fxml"));
-		Shared.getLayoutMap().put(LayoutsEnum.LoginLayout, parent);
-		
-		parent = FXMLLoader.load(getClass().getResource("view/mainLayoutFXML.fxml"));
-		Shared.getLayoutMap().put(LayoutsEnum.MainLayout, parent);
-		
-		
-	}
 
 	@Override
 	public void start(Stage primaryStage) throws Exception {
-		Shared.setStage(primaryStage);
+		StageManager manager = StageManager.getInstance(primaryStage);
 		
-		Scene loginScene = new Scene(Shared.getLayoutMap().get(LayoutsEnum.LoginLayout));
-		primaryStage.setScene(loginScene);
+		manager.switchTo(LayoutsEnum.LoginLayout);
 		primaryStage.show();
 	}
 	
