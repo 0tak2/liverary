@@ -7,7 +7,6 @@ import java.util.HashMap;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
-import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 
 class FXMLProperty {
@@ -111,6 +110,8 @@ public class StageManager {
 	private void initFXMLs() {
 		putFXMLProperty(LayoutsEnum.LoginLayout, new FXMLProperty(getClass().getResource("loginLayoutFXML.fxml"),
 							400, 230, "로그인"));
+		putFXMLProperty(LayoutsEnum.UserMainLayout, new FXMLProperty(getClass().getResource("userMainLayoutFXML.fxml"),
+				900, 600, "라이브'러리 메인"));
 		putFXMLProperty(LayoutsEnum.MainLayout, new FXMLProperty(getClass().getResource("mainLayoutFXML.fxml"),
 				900, 600, "반납/대출"));
 	}
@@ -119,19 +120,15 @@ public class StageManager {
 		FXMLProperty fxmlProperty = getFXMLProperty(key);
 		Parent root = this.parentMap.get(key);
 		if (root == null) {
-			try {
-				root = FXMLLoader.load(fxmlProperty.getUrl());
-				this.parentMap.put(key, root);
-			} catch (IOException e) {
-				throw new IOException("지정한 FXML 파일을 찾을 수 없거나 연결된 컨트롤러를 찾을 수 없습니다. URL을 확인해보십시오.");
-			}
+			root = FXMLLoader.load(fxmlProperty.getUrl());
+			this.parentMap.put(key, root);
 		}
 		
 		stage.setWidth(fxmlProperty.getPrefWidth());
 		stage.setHeight(fxmlProperty.getPrefHeight());
 		stage.setTitle(fxmlProperty.getTitle());
 		
-		try {			
+		try {
 			if (scene == null) {
 				scene = new Scene(root);
 				stage.setScene(scene);

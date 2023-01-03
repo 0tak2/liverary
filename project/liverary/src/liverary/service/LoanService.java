@@ -2,10 +2,15 @@ package liverary.service;
 
 import java.sql.Connection;
 import java.sql.SQLException;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 
 import javafx.collections.ObservableList;
+import liverary.dao.AccountDAO;
 import liverary.dao.DBCPConnectionPool;
 import liverary.dao.LoanDAO;
+import liverary.util.DateHelper;
+import liverary.vo.AccountVO;
 import liverary.vo.LoanVO;
 
 public class LoanService {
@@ -48,6 +53,97 @@ public class LoanService {
 		}
 		
 		return list;
+	}
+
+	public boolean insertLoanRecord(LoanVO row) {
+		
+		Connection con = null;
+		try {
+			con = DBCPConnectionPool.getDataSource().getConnection();
+			con.setAutoCommit(false);
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		
+		boolean sucess = false;
+		
+		LoanDAO dao = new LoanDAO(con);
+		int affectedRows = dao.insert(row);
+		
+		try {
+			if (affectedRows == 1) {
+				sucess = true;
+				con.commit();
+			} else {
+				con.rollback();
+				sucess = false;
+			}
+			
+			con.close();
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		
+		return sucess;
+	}
+
+	public Boolean updateLoanRecord(LoanVO row) {
+		Connection con = null;
+		try {
+			con = DBCPConnectionPool.getDataSource().getConnection();
+			con.setAutoCommit(false);
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		
+		// 연체도서 확인
+		boolean penalty = false;
+		LocalDate dueDate = LocalDate.parse(row.getLduedate(), DateTimeFormatter.ISO_DATE);
+		if (DateHelper.getDifferenceByToday(dueDate) > 0) {
+			penalty = true;
+		}
+		
+		// 반납처리
+		boolean sucess = false;
+		
+		LoanDAO loanDao = new LoanDAO(con);
+		int updateLoanAffectedRows = loanDao.update(row);
+		
+		AccountDAO accountDao = new AccountDAO(con);
+		AccountVO account = accountDao.select(row.getAno());
+
+		int updateAccountAffectedRows = 0;
+		if (!penalty) { // 정상 반납
+			updateAccountAffectedRows = accountDao.updatePoint(row.getAno(), account.getApoint() + 100);			
+		} else {
+			updateAccountAffectedRows = accountDao.updatePoint(row.getAno(), account.getApoint() - 100);
+		}
+		
+		try {
+			if (updateLoanAffectedRows == 1 && updateAccountAffectedRows == 1) {
+				sucess = true;
+				con.commit();
+			} else {
+				sucess = false;
+				con.rollback();
+			}
+			
+			con.close();
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		
+		return sucess;
+	}
+
+	public boolean getIsNeededPenalty(LoanVO record) {
+		boolean penalty = false;
+		LocalDate dueDate = LocalDate.parse(record.getLduedate(), DateTimeFormatter.ISO_DATE);
+		System.out.println(DateHelper.getDifferenceByToday(dueDate));
+		if (DateHelper.getDifferenceByToday(dueDate) > 0) {
+			penalty = true;
+		}
+		return penalty;
 	}
 
 }

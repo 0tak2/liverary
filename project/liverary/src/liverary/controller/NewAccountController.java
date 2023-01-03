@@ -3,11 +3,11 @@ package liverary.controller;
 import liverary.service.AccountService;
 import liverary.vo.AccountVO;
 
-public class GetAccountByUsernameController {
+public class NewAccountController {
 
-	public AccountVO exec(String username) {
+	public boolean exec(AccountVO newAccount) {
 		AccountService service = new AccountService();
-		return service.selectAccountbyUsername(username);
+		return service.insertNewAccount(newAccount);
 	}
-	
+
 }

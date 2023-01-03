@@ -2,10 +2,11 @@ package liverary.view;
 
 import java.io.IOException;
 import java.net.URL;
-import java.time.LocalDate;
+import java.util.Optional;
 import java.util.ResourceBundle;
 
 import javafx.application.Platform;
+import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -16,6 +17,7 @@ import javafx.scene.Scene;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.Button;
+import javafx.scene.control.ButtonType;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.Hyperlink;
 import javafx.scene.control.Label;
@@ -28,11 +30,14 @@ import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
 import liverary.Globals;
-import liverary.controller.GetBooksByKeywordController;
+import liverary.controller.GetAccountByNoController;
 import liverary.controller.GetLoanRecordsByISBNController;
 import liverary.controller.GetLoanRecordsByKeywordController;
+import liverary.controller.IsThisReturnNeededPenalty;
+import liverary.controller.LendBookController;
+import liverary.controller.ReturnBookController;
+import liverary.util.DateHelper;
 import liverary.vo.AccountVO;
-import liverary.vo.BookVO;
 import liverary.vo.LoanVO;
 
 public class MainLayout implements Initializable {
@@ -65,7 +70,7 @@ public class MainLayout implements Initializable {
 	
 	private SearchAccountsModal controller;
 	private AccountVO selectedAccount;
-	private BookVO selectedBook;
+	private LoanVO selectedBook;
 	
 	@Override
 	public void initialize(URL arg0, ResourceBundle arg1) {
@@ -79,10 +84,8 @@ public class MainLayout implements Initializable {
 		
 		// 상단 위젯 초기화
 		// 왼쪽
-		LocalDate date = LocalDate.now();
-		LocalDate dueDate = date.plusDays(7);
-		todayLabel.setText(date.toString());
-		dueDateLabel.setText("반납예정일: " + dueDate.toString());
+		todayLabel.setText(DateHelper.todayDateStr());
+		dueDateLabel.setText("반납예정일: " + DateHelper.AddDaysToTodayDateStr(7));
 		// 오른쪽
 		currentSession = Globals.getCurrentSession();
 		greetingLabel.setText(currentSession.getAname() + "(" + currentSession.getAusername() + ")님 반갑습니다.");
@@ -122,11 +125,7 @@ public class MainLayout implements Initializable {
 			TableRow<LoanVO> row = new TableRow<>();
 			
 			row.setOnMouseClicked(event -> {
-				if (event.getClickCount() == 2 && (!row.isEmpty())) { // 더블클릭
-					System.out.println("Double Clicked");
-		        } else if (event.getClickCount() == 1 && (!row.isEmpty())) {
-		        	System.out.println("Clicked");
-		        }				
+				selectedBook = row.getItem();			
 			});
 			
 			return row;
@@ -209,11 +208,94 @@ public class MainLayout implements Initializable {
 	
 	@FXML
 	private void handleLendBtn() {
+		if (selectedBook == null) {
+			(new Alert(
+					AlertType.ERROR, "먼저 자료를 선택해주십시오.")).showAndWait();
+			return;
+		}
 		
+		if (selectedAccount == null) {
+			(new Alert(
+					AlertType.ERROR, "먼저 이용자를 선택해주십시오.")).showAndWait();
+			return;
+		}
+		
+		if (selectedBook.isAvailable()) {
+			selectedBook.setAno(selectedAccount.getAno());
+			LendBookController controller = new LendBookController();
+			Boolean sucess = controller.exec(selectedBook);
+			
+			if (sucess) {
+				String msg = "대출 처리에 성공하였습니다.\n\n"
+						+ "대출 자료: " + selectedBook.getBtitle() + "(" + selectedBook.getBisbn() + ")\n\n"
+								+ "이용자: " + selectedAccount.getAname() + "(" + selectedAccount.getAbirth() + ")";
+				(new Alert(	AlertType.INFORMATION, msg)).showAndWait();
+				bookSearchTableView.setItems(FXCollections.<LoanVO>observableArrayList());
+				selectedBook = null;
+			} else {
+				(new Alert(
+						AlertType.ERROR, "대출 처리에 실패하였습니다. 문제가 반복되면 관리자에게 문희하십시오.")).showAndWait();
+			}
+			
+		} else {
+			(new Alert(
+					AlertType.ERROR, "현재 대출이 불가능한 자료입니다.")).showAndWait();
+		}
 	}
 	
 	@FXML
 	private void handleReuturnBtn() {
+		if (selectedBook == null) {
+			(new Alert(
+					AlertType.ERROR, "먼저 자료를 선택해주십시오.")).showAndWait();
+			return;
+		}
 		
+		if (selectedBook.isAvailable()) {
+			(new Alert(
+					AlertType.ERROR, "아직 대출되지 않은 자료를 선택하였습니다.")).showAndWait();
+			return;
+		}
+		
+		IsThisReturnNeededPenalty lcontroller1 = new IsThisReturnNeededPenalty();
+		boolean penalty = lcontroller1.exec(selectedBook);
+		if (penalty) {
+			GetAccountByNoController acontroller = new GetAccountByNoController();
+			AccountVO returnAccount = acontroller.exec(selectedBook.getAno());
+			
+			String msg = "연체자료 알림\n\n"
+					+ "대상 자료: " + selectedBook.getBtitle() + "(" + selectedBook.getBisbn() + ")\n\n"
+					+ "정상 반납기일: " + selectedBook.getLduedate() + "\n\n"
+					+ "이용자: " + returnAccount.getAname() + "(" + returnAccount.getAbirth() + ")\n\n"
+					+ "포인트 감소: " + returnAccount.getApoint() + "->" + (returnAccount.getApoint() - 100);
+			Optional<ButtonType> result = new Alert(AlertType.CONFIRMATION, msg).showAndWait();
+			if(!result.isPresent()) {
+				return;
+			} else if(result.get() == ButtonType.OK) {
+				//
+			} else if(result.get() == ButtonType.CANCEL) {
+				return;
+			}
+			
+		} else {
+			
+		}
+		
+		ReturnBookController lcontroller2 = new ReturnBookController();
+		boolean sucess = lcontroller2.exec(selectedBook);
+		
+		if (sucess) {
+			GetAccountByNoController accountController = new GetAccountByNoController();
+			AccountVO returnedAccount = accountController.exec(selectedBook.getAno());
+			String msg = "반납 처리에 성공하였습니다.\n\n"
+							+ "반납 자료: " + selectedBook.getBtitle() + "(" + selectedBook.getBisbn() + ")\n\n"
+									+ "이용자: " + returnedAccount.getAname() + "(" + returnedAccount.getAbirth() + ")";
+			(new Alert(	AlertType.INFORMATION, msg)).showAndWait();
+			bookSearchTableView.setItems(FXCollections.<LoanVO>observableArrayList());
+			selectedBook = null;
+		} else {
+			(new Alert(
+					AlertType.ERROR, "반납 처리에 실패하였습니다. 문제가 반복되면 관리자에게 문희하십시오.")).showAndWait();
+		}
 	}
 }

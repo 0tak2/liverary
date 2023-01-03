@@ -9,8 +9,8 @@ public class AccountVO {
 	private String aphone;
 	private String aemail;
 	private String aaddr;
-	private String apoint;
-	private String alevel;
+	private int apoint;
+	private int alevel;
 	private String ausername;
 	private String apassword;
 	
@@ -27,11 +27,27 @@ public class AccountVO {
 	}
 
 	public AccountVO(int ano, String aname, String adepartment, String abirth, String acreatedAt, String aphone,
-			String aemail, String aaddr, String apoint, String alevel, String ausername, String apassword) {
+			String aemail, String aaddr, int apoint, int alevel, String ausername, String apassword) {
 		super();
 		this.ano = ano;
 		this.aname = aname;
 		this.adepartment = adepartment;
+		this.abirth = abirth;
+		this.acreatedAt = acreatedAt;
+		this.aphone = aphone;
+		this.aemail = aemail;
+		this.aaddr = aaddr;
+		this.apoint = apoint;
+		this.alevel = alevel;
+		this.ausername = ausername;
+		this.apassword = apassword;
+	}
+	
+	public AccountVO(String aname, String abirth, String acreatedAt, String aphone,
+			String aemail, String aaddr, int apoint, int alevel, String ausername, String apassword) {
+		super();
+		this.ano = ano;
+		this.aname = aname;
 		this.abirth = abirth;
 		this.acreatedAt = acreatedAt;
 		this.aphone = aphone;
@@ -107,19 +123,19 @@ public class AccountVO {
 		this.aaddr = aaddr;
 	}
 
-	public String getApoint() {
+	public int getApoint() {
 		return apoint;
 	}
 
-	public void setApoint(String apoint) {
+	public void setApoint(int apoint) {
 		this.apoint = apoint;
 	}
 
-	public String getAlevel() {
+	public int getAlevel() {
 		return alevel;
 	}
 
-	public void setAlevel(String alevel) {
+	public void setAlevel(int alevel) {
 		this.alevel = alevel;
 	}
 

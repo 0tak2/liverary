@@ -15,8 +15,20 @@ public class LoanVO {
 	private String bsupplement;
 	private String bpublisher;
 	private boolean available;
+	private int ano;
 	private String available_kor;
 	
+	public int getAno() {
+		return ano;
+	}
+
+	
+	public void setAno(int ano) {
+		this.ano = ano;
+	}
+
+
+
 	public LoanVO() {
 	}
 
@@ -31,12 +43,12 @@ public class LoanVO {
 	public void setAvailable_kor(String available_kor) {
 		this.available_kor = available_kor;
 	}
-
+	
 
 
 	public LoanVO(int lno, String lcreatedat, String lduedate, String lreturnedAt, String bisbn, String btitle,
 			String bdate, int bpage, int bprice, String bauthor, String btranslator, String bsupplement,
-			String bpublisher, boolean available, String available_kor) {
+			String bpublisher, boolean available, int ano, String available_kor) {
 		super();
 		this.lno = lno;
 		this.lcreatedat = lcreatedat;
@@ -52,10 +64,10 @@ public class LoanVO {
 		this.bsupplement = bsupplement;
 		this.bpublisher = bpublisher;
 		this.available = available;
+		this.ano = ano;
 		this.available_kor = available_kor;
 	}
 
-	
 
 	public int getLno() {
 		return lno;

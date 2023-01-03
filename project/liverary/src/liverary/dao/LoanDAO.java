@@ -7,6 +7,7 @@ import java.sql.SQLException;
 
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import liverary.util.DateHelper;
 import liverary.vo.BookVO;
 import liverary.vo.LoanVO;
 
@@ -25,7 +26,7 @@ public class LoanDAO {
 		ObservableList<LoanVO> list = null;
 		
 		try {
-			String sql = "SELECT L.lno, L.lcreatedat, L.lduedate, L.lreturnedAt, "
+			String sql = "SELECT L.lno, L.lcreatedat, L.lduedate, L.lreturnedAt, L.ano, "
 					+ "B.bisbn, B.btitle, B.bdate, B.bpage, B.bprice, B.bauthor, B.btranslator, B.bsupplement, B.bpublisher, "
 					+ "IF(L.lno IS NOT NULL, IF(L.lreturnedAt IS NULL, false, true), true) AS available "
 					+ "FROM BOOKSTBL B "
@@ -60,6 +61,7 @@ public class LoanDAO {
 											rs.getString("bsupplement"),
 											rs.getString("bpublisher"),
 											rs.getBoolean("available"),
+											rs.getInt("ano"),
 											available_kor);
 				list.add(book);
 			}
@@ -74,7 +76,7 @@ public class LoanDAO {
 		ObservableList<LoanVO> list = null;
 		
 		try {
-			String sql = "SELECT L.lno, L.lcreatedat, L.lduedate, L.lreturnedAt, "
+			String sql = "SELECT L.lno, L.lcreatedat, L.lduedate, L.lreturnedAt, L.ano, "
 					+ "B.bisbn, B.btitle, B.bdate, B.bpage, B.bprice, B.bauthor, B.btranslator, B.bsupplement, B.bpublisher, "
 					+ "IF(L.lno IS NOT NULL, IF(L.lreturnedAt IS NULL, false, true), true) AS available "
 					+ "FROM BOOKSTBL B "
@@ -94,7 +96,7 @@ public class LoanDAO {
 				if (rs.getBoolean("available")) {
 					available_kor = "대출가능";
 				}
-				
+
 				LoanVO book = new LoanVO(rs.getInt("lno"),
 											rs.getString("lcreatedat"),
 											rs.getString("lduedate"),
@@ -109,6 +111,7 @@ public class LoanDAO {
 											rs.getString("bsupplement"),
 											rs.getString("bpublisher"),
 											rs.getBoolean("available"),
+											rs.getInt("ano"),
 											available_kor);
 				list.add(book);
 			}
@@ -119,4 +122,40 @@ public class LoanDAO {
 		return list;
 	}
 
+	public int insert(LoanVO row) {
+		int affectedRows = 0;
+		try {
+			String sql = "INSERT INTO loanrecordtbl(bisbn, ano, lcreatedAt, ldueDate, lreturnedAt) "
+					+ "VALUES (?, ?, ?, ?, null)";
+			PreparedStatement pstmt = con.prepareStatement(sql);
+			
+			pstmt.setString(1, row.getBisbn());
+			pstmt.setInt(2, row.getAno());
+			pstmt.setString(3, DateHelper.todayDateStr());
+			pstmt.setString(4, DateHelper.AddDaysToTodayDateStr(7));
+			
+			affectedRows = pstmt.executeUpdate();
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		
+		return affectedRows;
+	}
+
+	public int update(LoanVO row) {
+		int affectedRows = 0;
+		try {
+			String sql = "UPDATE loanRecordTBL SET lreturnedAt = ? WHERE lno = ?";
+			PreparedStatement pstmt = con.prepareStatement(sql);
+			
+			pstmt.setString(1, DateHelper.todayDateStr());
+			pstmt.setInt(2, row.getLno());
+			
+			affectedRows = pstmt.executeUpdate();
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		
+		return affectedRows;
+	}
 }
