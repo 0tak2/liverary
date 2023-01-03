@@ -1,7 +1,7 @@
 package liverary.vo;
 
 public class AccountVO {
-	private String ano;
+	private int ano;
 	private String aname;
 	private String adepartment;
 	private String abirth;
@@ -16,8 +16,17 @@ public class AccountVO {
 	
 	public AccountVO() {
 	}
+	
+	public AccountVO(int ano, String aname, String abirth, String aphone, String ausername) {
+		super();
+		this.ano = ano;
+		this.aname = aname;
+		this.abirth = abirth;
+		this.aphone = aphone;
+		this.ausername = ausername;
+	}
 
-	public AccountVO(String ano, String aname, String adepartment, String abirth, String acreatedAt, String aphone,
+	public AccountVO(int ano, String aname, String adepartment, String abirth, String acreatedAt, String aphone,
 			String aemail, String aaddr, String apoint, String alevel, String ausername, String apassword) {
 		super();
 		this.ano = ano;
@@ -34,11 +43,11 @@ public class AccountVO {
 		this.apassword = apassword;
 	}
 
-	public String getAno() {
+	public int getAno() {
 		return ano;
 	}
 
-	public void setAno(String ano) {
+	public void setAno(int ano) {
 		this.ano = ano;
 	}
 

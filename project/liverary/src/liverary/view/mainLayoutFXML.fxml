@@ -33,47 +33,22 @@
 -->
 
 <?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.ComboBox?>
 <?import javafx.scene.control.Hyperlink?>
 <?import javafx.scene.control.Label?>
-<?import javafx.scene.control.Menu?>
-<?import javafx.scene.control.MenuBar?>
-<?import javafx.scene.control.MenuItem?>
+<?import javafx.scene.control.Separator?>
+<?import javafx.scene.control.TableView?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.layout.FlowPane?>
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.Region?>
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-<VBox prefHeight="552.0" prefWidth="1157.0" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1" fx:controller="liverary.view.MainLayout">
-  <children>
-    <MenuBar VBox.vgrow="NEVER">
-      <menus>
-        <Menu mnemonicParsing="false" text="열람업무">
-          <items>
-            <MenuItem fx:id="goToMainMenuItem" mnemonicParsing="false" onAction="#handleGoToMainMenuItem" text="반납/대출 (기본화면)" />
-            <MenuItem fx:id="gotoRecentLogMenuItem" mnemonicParsing="false" onAction="#handleGoToRecentLogMenuItem" text="최근이용이력" />
-            <MenuItem fx:id="goToNoReturnedMenuItem" mnemonicParsing="false" onAction="#handleGoToNoReturnedMenuItem" text="미반납자료/반납독촉" />
-          </items>
-        </Menu>
-        <Menu mnemonicParsing="false" text="수서업무">
-          <items>
-            <MenuItem fx:id="goToAddNewBookMenuItem" mnemonicParsing="false" onAction="#handleGoToAddNewBookMenuItem" text="자료입수" />
-          </items>
-        </Menu>
-        <Menu mnemonicParsing="false" text="자료관리">
-          <items>
-            <MenuItem fx:id="goToGetDetailBookInfoMenuItem" mnemonicParsing="false" onAction="#handleGoToGetDetailBookInfoMenuItem" text="자료상세조회" />
-                  <MenuItem fx:id="goToEditBookInfoMenuItem" mnemonicParsing="false" onAction="#handleGoToEditBookInfoMenuItem" text="서지사항수정" />
-          </items>
-        </Menu>
-            <Menu mnemonicParsing="false" text="계정관리">
-               <items>
-                  <MenuItem fx:id="goToRegisterStaffAccountMenuItem" mnemonicParsing="false" onAction="#handleGoToRegisterStaffAccountMenuItem" text="직원등록" />
-                  <MenuItem fx:id="goToEditStaffAccountMenuItem" mnemonicParsing="false" onAction="#handleGoToEditBookInfoMenuItem" text="직원조회/수정" />
-               </items>
-            </Menu>
-      </menus>
-    </MenuBar>
-      <HBox nodeOrientation="LEFT_TO_RIGHT" prefHeight="100.0" prefWidth="200.0">
+<VBox fx:id="rootVBox" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="600.0" prefWidth="900.0" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1" fx:controller="liverary.view.MainLayout">
+   <children>
+      <HBox nodeOrientation="LEFT_TO_RIGHT" prefHeight="100.0" prefWidth="1200.0">
          <children>
             <VBox alignment="CENTER" prefHeight="100.0" prefWidth="300.0">
                <children>
@@ -95,7 +70,7 @@
             <Region prefHeight="200.0" prefWidth="200.0" HBox.hgrow="ALWAYS" />
             <VBox alignment="CENTER" prefHeight="200.0" prefWidth="300.0">
                <children>
-                  <Label fx:id="greetingLable" text="임영택(lim)님 반갑습니다.">
+                  <Label fx:id="greetingLabel" text="임영택(lim)님 반갑습니다.">
                      <font>
                         <Font size="13.0" />
                      </font>
@@ -105,7 +80,7 @@
                         <Font size="13.0" />
                      </font>
                   </Label>
-                  <Hyperlink fx:id="logoutLink" text="로그아웃">
+                  <Hyperlink fx:id="logoutLink" onAction="#handleLogout" text="로그아웃">
                      <font>
                         <Font size="13.0" />
                      </font>
@@ -117,5 +92,53 @@
             </VBox>
          </children>
       </HBox>
-  </children>
+      <Separator prefWidth="200.0">
+         <VBox.margin>
+            <Insets bottom="10.0" top="5.0" />
+         </VBox.margin>
+      </Separator>
+      <HBox prefHeight="60.0" prefWidth="720.0">
+         <children>
+            <FlowPane alignment="CENTER" prefHeight="60.0" prefWidth="450.0">
+               <children>
+                  <ComboBox fx:id="bookSerachByCombobox" onAction="#hadleCombobox" prefHeight="22.0" prefWidth="88.0" />
+                  <TextField fx:id="bookSearchKeywordTextField" onAction="#handleSearchTextFieldEntered" prefHeight="22.0" prefWidth="262.0" />
+                  <Button fx:id="bookSearchBtn" mnemonicParsing="false" onAction="#handleSearchBtn" text="자료검색" />
+               </children>
+               <padding>
+                  <Insets bottom="3.0" left="3.0" right="3.0" top="3.0" />
+               </padding>
+            </FlowPane>
+            <FlowPane alignment="CENTER" layoutX="10.0" layoutY="10.0" prefHeight="59.0" prefWidth="450.0" style="-fx-background-color: #F0E68C;">
+               <children>
+                  <Label fx:id="currentUserLabel" text="선택된 이용자가 없습니다." />
+                  <Button fx:id="showSearchAccoutModalBtn" mnemonicParsing="false" onAction="#handleShowSearchAccoutModalBtn" text="회원조회" />
+               </children>
+               <padding>
+                  <Insets bottom="3.0" left="3.0" right="3.0" top="3.0" />
+               </padding>
+            </FlowPane>
+         </children>
+      </HBox>
+      <TableView fx:id="bookSearchTableView" prefHeight="384.0" prefWidth="900.0">
+         <VBox.margin>
+            <Insets top="7.0" />
+         </VBox.margin></TableView>
+      <HBox alignment="CENTER_RIGHT" prefHeight="36.0" prefWidth="885.0">
+         <children>
+            <Button fx:id="lendBtn" mnemonicParsing="false" onAction="#handleLendBtn" text="대출처리">
+               <HBox.margin>
+                  <Insets right="5.0" />
+               </HBox.margin>
+            </Button>
+            <Button fx:id="returnBtn" layoutX="666.0" layoutY="17.0" mnemonicParsing="false" onAction="#handleReuturnBtn" text="반납처리" />
+         </children>
+         <padding>
+            <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
+         </padding>
+         <VBox.margin>
+            <Insets />
+         </VBox.margin>
+      </HBox>
+   </children>
 </VBox>

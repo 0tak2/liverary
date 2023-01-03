@@ -34,26 +34,13 @@ public class LoginLayout implements Initializable {
 			return;
 		}
 		
-		// FOR DEBUG (테스트 후 삭제 요망)
-		if (inputUsername.equals("debug")) {
-			StageManager manager = StageManager.getInstance();
-			try {
-				//manager.switchTo(LayoutsEnum.MainLayout);
-				manager.switchTo(LayoutsEnum.MainTestingLayout);
-			} catch (Exception e) {
-				e.printStackTrace();
-			}
-			return;
-		}
-		//
-
 		GetAccountByUsernameController controller = new GetAccountByUsernameController();
 		AccountVO account = controller.exec(inputUsername);
 		
 		if (inputPassword.equals(account.getApassword())) {
 			Globals.setCurrentSession(account);
 			StageManager manager = StageManager.getInstance();
-			
+			password_textfield.clear();
 			try {
 				manager.switchTo(LayoutsEnum.MainLayout);
 			} catch (Exception e) {

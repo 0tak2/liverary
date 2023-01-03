@@ -30,7 +30,7 @@ public class AccountDAO {
 			ResultSet rs = pstmt.executeQuery();
 			
 			rs.next();
-			account = new AccountVO(rs.getString("ano"), rs.getString("aname"), rs.getString("adepartment"), rs.getString("abirth"), rs.getString("acreatedAt"), rs.getString("aphone"),
+			account = new AccountVO(rs.getInt("ano"), rs.getString("aname"), rs.getString("adepartment"), rs.getString("abirth"), rs.getString("acreatedAt"), rs.getString("aphone"),
 									rs.getString("aemail"), rs.getString("aaddr"), rs.getString("apoint"), rs.getString("alevel"), rs.getString("ausername"), rs.getString("apassword"));
 		} catch (SQLException e) {
 			e.printStackTrace();
