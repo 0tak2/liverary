@@ -21,9 +21,9 @@ public class BookDAO {
 
 	public ObservableList<BookVO> selectByISBN(String isbn) {
 		ObservableList<BookVO> list = null;
-		
+
 		try {
-			String sql = "SELECT bisbn, btitle, bauthor, bprice "
+			String sql = "SELECT * "
 					+ "FROM booksTBL "
 					+ "WHERE bisbn = ?";
 			PreparedStatement pstmt = con.prepareStatement(sql);
@@ -31,8 +31,10 @@ public class BookDAO {
 			ResultSet rs = pstmt.executeQuery();
 			list = FXCollections.observableArrayList();
 			while(rs.next()) {
-				BookVO book = new BookVO(rs.getString("bisbn"), rs.getString("btitle"),
-						rs.getString("bauthor"), rs.getInt("bprice"));
+				BookVO book = new BookVO(rs.getString("bisbn"), rs.getString("btitle"), 
+						rs.getInt("bprice"), rs.getString("bauthor"), rs.getString("btranslator"),
+						rs.getString("bpublisher"), rs.getString("bdate"), rs.getInt("bpage"), 
+						rs.getString("bsupplement"));
 				list.add(book);
 			}
 		} catch (SQLException e) {
@@ -46,7 +48,7 @@ public class BookDAO {
 ObservableList<BookVO> list = null;
 		
 		try {
-			String sql = "SELECT bisbn, btitle, bauthor, bprice "
+			String sql = "SELECT * "
 					+ "FROM booksTBL "
 					+ "WHERE btitle LIKE ?";
 			PreparedStatement pstmt = con.prepareStatement(sql);
@@ -54,8 +56,10 @@ ObservableList<BookVO> list = null;
 			ResultSet rs = pstmt.executeQuery();
 			list = FXCollections.observableArrayList();
 			while(rs.next()) {
-				BookVO book = new BookVO(rs.getString("bisbn"), rs.getString("btitle"),
-						rs.getString("bauthor"), rs.getInt("bprice"));
+				BookVO book = new BookVO(rs.getString("bisbn"), rs.getString("btitle"), 
+						rs.getInt("bprice"), rs.getString("bauthor"), rs.getString("btranslator"),
+						rs.getString("bpublisher"), rs.getString("bdate"), rs.getInt("bpage"), 
+						rs.getString("bsupplement"));
 				list.add(book);
 			}
 		} catch (SQLException e) {
@@ -63,5 +67,31 @@ ObservableList<BookVO> list = null;
 		}
 		
 		return list;
+	}
+
+	public int insert(BookVO book) {
+		int affectedRows = 0;
+		try {
+			String sql = "INSERT INTO `booksTBL`(bisbn, btitle, bdate, bpage, "
+					+ "bprice, bauthor, btranslator, bsupplement, bpublisher) "
+					+ "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)";
+			PreparedStatement pstmt = con.prepareStatement(sql);
+			
+			pstmt.setString(1, book.getBisbn());
+			pstmt.setString(2, book.getBtitle());
+			pstmt.setString(3, book.getBdate());
+			pstmt.setInt(4, book.getBpage());
+			pstmt.setInt(5, book.getBprice());
+			pstmt.setString(6, book.getBauthor());
+			pstmt.setString(7, book.getBtranslator());
+			pstmt.setString(8, book.getBsupplement());
+			pstmt.setString(9, book.getBpublisher());
+			
+			affectedRows = pstmt.executeUpdate();
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		
+		return affectedRows;
 	}
 }

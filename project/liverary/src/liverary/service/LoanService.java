@@ -209,7 +209,6 @@ public class LoanService {
 		ObservableList<LoanVO> list = FXCollections.observableArrayList();
 		for (LoanVO row : listBeforeProcessed) {
 			if (row.getAvailable_kor().equals("반납완료")) {
-				System.out.println(row.getBtitle());
 				LocalDate returnedDate = LocalDate.parse(row.getLreturnedAt(), DateTimeFormatter.ISO_DATE);
 				LocalDate dueDate = LocalDate.parse(row.getLduedate(), DateTimeFormatter.ISO_DATE);
 				if (DateHelper.getDifferenceBetween(returnedDate, dueDate) > 0) {
@@ -219,6 +218,128 @@ public class LoanService {
 				}
 			}
 			list.add(row);
+		}
+		
+		try {
+			con.close();
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		
+		return list;
+	}
+	
+	public ObservableList<LoanVO> selectLoanBookRowsByKeywordWithDates(String keyword, String startDate, String endDate) {
+		Connection con = null;
+		try {
+			con = DBCPConnectionPool.getDataSource().getConnection();
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		
+		LoanDAO dao = new LoanDAO(con);
+		ObservableList<LoanVO> listBeforeProcessed = dao.selectBooksByKeyword(keyword, startDate, endDate);
+		ObservableList<LoanVO> list = FXCollections.observableArrayList();
+		for (LoanVO row : listBeforeProcessed) {
+			if (row.getAvailable_kor().equals("반납완료")) {
+				LocalDate returnedDate = LocalDate.parse(row.getLreturnedAt(), DateTimeFormatter.ISO_DATE);
+				LocalDate dueDate = LocalDate.parse(row.getLduedate(), DateTimeFormatter.ISO_DATE);
+				if (DateHelper.getDifferenceBetween(returnedDate, dueDate) > 0) {
+					row.setAvailable_kor("반납완료 (연체)");
+				} else {
+					row.setAvailable_kor("반납완료 (정상)");
+				}
+			}
+			list.add(row);
+		}
+		
+		try {
+			con.close();
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		
+		return list;
+	}
+
+	public ObservableList<LoanVO> selectLoanBookRowsByISBNWithDates(String isbn, String startDate, String endDate) {
+		Connection con = null;
+		try {
+			con = DBCPConnectionPool.getDataSource().getConnection();
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		
+		LoanDAO dao = new LoanDAO(con);
+		ObservableList<LoanVO> listBeforeProcessed = dao.selectBooksByISBN(isbn, startDate, endDate);
+		ObservableList<LoanVO> list = FXCollections.observableArrayList();
+		for (LoanVO row : listBeforeProcessed) {
+			if (row.getAvailable_kor().equals("반납완료")) {
+				LocalDate returnedDate = LocalDate.parse(row.getLreturnedAt(), DateTimeFormatter.ISO_DATE);
+				LocalDate dueDate = LocalDate.parse(row.getLduedate(), DateTimeFormatter.ISO_DATE);
+				if (DateHelper.getDifferenceBetween(returnedDate, dueDate) > 0) {
+					row.setAvailable_kor("반납완료 (연체)");
+				} else {
+					row.setAvailable_kor("반납완료 (정상)");
+				}
+			}
+			list.add(row);
+		}
+		
+		try {
+			con.close();
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		
+		return list;
+	}
+
+	public ObservableList<LoanVO> selectNoReturnedBookRowsByKeywordWithDates(String keyword, String startDate,
+			String endDate) {
+		
+		Connection con = null;
+		try {
+			con = DBCPConnectionPool.getDataSource().getConnection();
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		
+		LoanDAO dao = new LoanDAO(con);
+		ObservableList<LoanVO> listOfAll = dao.selectBooksByKeyword(keyword, startDate, endDate);
+		ObservableList<LoanVO> list = FXCollections.observableArrayList();
+		for (LoanVO row : listOfAll) {
+			if (row.getAvailable_kor().equals("대출중")) {
+				list.add(row);
+			}
+		}
+		
+		try {
+			con.close();
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		
+		return list;
+	}
+	
+	public ObservableList<LoanVO> selectNoReturnedBookRowsByISBNWithDates(String keyword, String startDate,
+			String endDate) {
+		
+		Connection con = null;
+		try {
+			con = DBCPConnectionPool.getDataSource().getConnection();
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		
+		LoanDAO dao = new LoanDAO(con);
+		ObservableList<LoanVO> listOfAll = dao.selectBooksByISBN(keyword, startDate, endDate);
+		ObservableList<LoanVO> list = FXCollections.observableArrayList();
+		for (LoanVO row : listOfAll) {
+			if (row.getAvailable_kor().equals("대출중")) {
+				list.add(row);
+			}
 		}
 		
 		try {

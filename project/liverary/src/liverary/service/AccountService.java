@@ -80,4 +80,33 @@ public class AccountService {
 		return result;
 	}
 
+	public boolean updateAccount(AccountVO account) {
+		boolean result = false;
+		Connection con = null;
+		try {
+			con = DBCPConnectionPool.getDataSource().getConnection();
+			con.setAutoCommit(false);
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		
+		AccountDAO dao = new AccountDAO(con);
+		int affectedRows = dao.update(account);
+		
+		try {
+			if (affectedRows == 1) {
+				result = true;
+				con.commit();
+			} else {
+				result = false;
+				con.rollback();
+			}
+			con.close();
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		
+		return result;
+	}
+
 }

@@ -8,7 +8,7 @@ public class BookVO {
 	private String btranslator;
 	private String bpublisher;
 	private String bdate;
-	private String bpage;
+	private int bpage;
 	private String bsupplement;
 	
 	public BookVO() {
@@ -25,7 +25,7 @@ public class BookVO {
 
 
 	public BookVO(String bisbn, String btitle, int bprice, String bauthor, String btranslator, String bpublisher,
-			String bdate, String bpage, String bsupplement) {
+			String bdate, int bpage, String bsupplement) {
 		super();
 		this.bisbn = bisbn;
 		this.btitle = btitle;
@@ -94,11 +94,11 @@ public class BookVO {
 		this.bdate = bdate;
 	}
 
-	public String getBpage() {
+	public int getBpage() {
 		return bpage;
 	}
 
-	public void setBpage(String bpage) {
+	public void setBpage(int bpage) {
 		this.bpage = bpage;
 	}
 

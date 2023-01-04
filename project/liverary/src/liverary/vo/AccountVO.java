@@ -43,6 +43,7 @@ public class AccountVO {
 		this.apassword = apassword;
 	}
 	
+	// 이용자 인서트용
 	public AccountVO(String aname, String abirth, String acreatedAt, String aphone,
 			String aemail, String aaddr, int apoint, int alevel, String ausername, String apassword) {
 		super();
@@ -55,6 +56,33 @@ public class AccountVO {
 		this.apoint = apoint;
 		this.alevel = alevel;
 		this.ausername = ausername;
+		this.apassword = apassword;
+	}
+	
+	public AccountVO(int ano, String aname, String abirth, String acreatedAt, String aphone,
+			String aemail, String aaddr, int apoint, int alevel, String ausername, String apassword) {
+		super();
+		this.aname = aname;
+		this.abirth = abirth;
+		this.acreatedAt = acreatedAt;
+		this.aphone = aphone;
+		this.aemail = aemail;
+		this.aaddr = aaddr;
+		this.apoint = apoint;
+		this.alevel = alevel;
+		this.ausername = ausername;
+		this.apassword = apassword;
+	}
+	
+	// 계정 정보 업데이트용
+	public AccountVO(int ano, String aname, String adepartment, String aphone, String aemail, String aaddr, String apassword) {
+		super();
+		this.ano = ano;
+		this.aname = aname;
+		this.adepartment = adepartment;
+		this.aphone = aphone;
+		this.aemail = aemail;
+		this.aaddr = aaddr;
 		this.apassword = apassword;
 	}
 

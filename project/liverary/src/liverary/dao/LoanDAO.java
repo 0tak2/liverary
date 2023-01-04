@@ -126,13 +126,11 @@ public class LoanDAO {
 		ObservableList<LoanVO> list = null;
 		
 		try {
-			String sql = "SELECT L.lno, L.lcreatedat, L.lduedate, L.lreturnedAt, L.ano, "
+			String sql = "SELECT L.lno, L.lcreatedAt, L.lduedate, L.lreturnedAt, L.ano, "
 					+ "B.bisbn, B.btitle, B.bdate, B.bpage, B.bprice, B.bauthor, B.btranslator, B.bsupplement, B.bpublisher, "
 					+ "IF(L.lno IS NOT NULL, IF(L.lreturnedAt IS NULL, false, true), true) AS available "
 					+ "FROM BOOKSTBL B "
-					+ "LEFT JOIN (SELECT L2.lno AS lno, bisbn, ano, lcreatedAt, ldueDate, lreturnedAt FROM LOANRECORDTBL L1 "
-					+ "INNER JOIN (SELECT MAX(lno) AS lno FROM LOANRECORDTBL GROUP BY bisbn) L2 "
-					+ "WHERE L1.lno = L2.lno) L "
+					+ "INNER JOIN LOANRECORDTBL L "
 					+ "ON B.BISBN = L.BISBN "
 					+ "WHERE L.ano = ? "
 					+ "ORDER BY L.lno DESC";
@@ -232,6 +230,108 @@ public class LoanDAO {
 							rs.getString("lduedate"), rs.getString("lreturnedAt"));	
 					list.add(row);
 				}
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		
+		return list;
+	}
+
+	public ObservableList<LoanVO> selectBooksByKeyword(String keyword, String startDate, String endDate) {
+		ObservableList<LoanVO> list = null;
+
+		try {
+			String sql = "SELECT L.lno, L.lcreatedAt, L.lduedate, L.lreturnedAt, L.ano, "
+					+ "B.bisbn, B.btitle, B.bdate, B.bpage, B.bprice, B.bauthor, B.btranslator, B.bsupplement, B.bpublisher, "
+					+ "IF(L.lno IS NOT NULL, IF(L.lreturnedAt IS NULL, false, true), true) AS available "
+					+ "FROM BOOKSTBL B "
+					+ "INNER JOIN LOANRECORDTBL L "
+					+ "ON B.BISBN = L.BISBN "
+					+ "WHERE B.btitle LIKE ?"
+					+ "AND L.lcreatedAt BETWEEN ? AND ? "
+					+ "ORDER BY L.lno DESC";
+			PreparedStatement pstmt = con.prepareStatement(sql);
+			pstmt.setString(1, "%" + keyword + "%");
+			pstmt.setString(2, startDate);
+			pstmt.setString(3, endDate);
+			ResultSet rs = pstmt.executeQuery();
+			list = FXCollections.observableArrayList();
+			
+			while(rs.next()) {
+				String available_kor = "대출중";
+				if (rs.getBoolean("available")) {
+					available_kor = "반납완료";
+				}
+				
+				LoanVO book = new LoanVO(rs.getInt("lno"),
+											rs.getString("lcreatedat"),
+											rs.getString("lduedate"),
+											rs.getString("lreturnedAt"),
+											rs.getString("bisbn"),
+											rs.getString("btitle"),
+											rs.getString("bdate"),
+											rs.getInt("bpage"),
+											rs.getInt("bprice"),
+											rs.getString("bauthor"),
+											rs.getString("btranslator"),
+											rs.getString("bsupplement"),
+											rs.getString("bpublisher"),
+											rs.getBoolean("available"),
+											rs.getInt("ano"),
+											available_kor);
+				list.add(book);
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		
+		return list;
+	}
+
+	public ObservableList<LoanVO> selectBooksByISBN(String bisbn, String startDate, String endDate) {
+		ObservableList<LoanVO> list = null;
+
+		try {
+			String sql = "SELECT L.lno, L.lcreatedAt, L.lduedate, L.lreturnedAt, L.ano, "
+					+ "B.bisbn, B.btitle, B.bdate, B.bpage, B.bprice, B.bauthor, B.btranslator, B.bsupplement, B.bpublisher, "
+					+ "IF(L.lno IS NOT NULL, IF(L.lreturnedAt IS NULL, false, true), true) AS available "
+					+ "FROM BOOKSTBL B "
+					+ "INNER JOIN LOANRECORDTBL L "
+					+ "ON B.BISBN = L.BISBN "
+					+ "WHERE B.bisbn = ?"
+					+ "AND L.lcreatedAt BETWEEN ? AND ? "
+					+ "ORDER BY L.lno DESC";
+			PreparedStatement pstmt = con.prepareStatement(sql);
+			pstmt.setString(1, bisbn);
+			pstmt.setString(2, startDate);
+			pstmt.setString(3, endDate);
+			ResultSet rs = pstmt.executeQuery();
+			list = FXCollections.observableArrayList();
+			
+			while(rs.next()) {
+				String available_kor = "대출중";
+				if (rs.getBoolean("available")) {
+					available_kor = "반납완료";
+				}
+				
+				LoanVO book = new LoanVO(rs.getInt("lno"),
+											rs.getString("lcreatedat"),
+											rs.getString("lduedate"),
+											rs.getString("lreturnedAt"),
+											rs.getString("bisbn"),
+											rs.getString("btitle"),
+											rs.getString("bdate"),
+											rs.getInt("bpage"),
+											rs.getInt("bprice"),
+											rs.getString("bauthor"),
+											rs.getString("btranslator"),
+											rs.getString("bsupplement"),
+											rs.getString("bpublisher"),
+											rs.getBoolean("available"),
+											rs.getInt("ano"),
+											available_kor);
+				list.add(book);
 			}
 		} catch (SQLException e) {
 			e.printStackTrace();

@@ -109,4 +109,29 @@ public class AccountDAO {
 		return affectedRows;
 	}
 
+	public int update(AccountVO account) {
+		int affectedRows = 0;
+		try {
+			String sql = "UPDATE `accountsTBL` "
+					+ "SET aname = ?, adepartment = ?, aphone = ?, aemail = ?, aaddr = ?, apassword = ?"
+					+ "WHERE ano = ?";
+
+			PreparedStatement pstmt = con.prepareStatement(sql);
+			
+			pstmt.setString(1, account.getAname());
+			pstmt.setString(2, account.getAdepartment());
+			pstmt.setString(3, account.getAphone());
+			pstmt.setString(4, account.getAemail());
+			pstmt.setString(5, account.getAaddr());
+			pstmt.setString(6, account.getApassword());
+			pstmt.setInt(7, account.getAno());
+			
+			affectedRows = pstmt.executeUpdate();
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		
+		return affectedRows;
+	}
+
 }

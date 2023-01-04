@@ -74,12 +74,12 @@ public class LoginLayout implements Initializable {
 	
 	@FXML
 	private void usernameTextFieldEntered() {
-		handleLoginBtn();
+		loginBtn.fire();
 	}
 	
 	@FXML
 	private void passwordTextFieldEntered() {
-		handleLoginBtn();
+		loginBtn.fire();
 	}
 	
 	@FXML

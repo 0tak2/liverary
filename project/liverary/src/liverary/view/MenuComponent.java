@@ -26,29 +26,51 @@ public class MenuComponent implements Initializable {
 	@FXML private Label additionalInfoLabel;
 	@FXML private Hyperlink logoutLink;
 	
+	private StageManager manager;
+	
 	@FXML
 	private void handleGoToMainMenuItem() {
-		System.out.println("handleGoToMainMenuItem");
+		try {
+			manager.switchTo(LayoutsEnum.MainLayout);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
 	}
 	
 	@FXML
 	private void handleGoToRecentLogMenuItem() {
-		System.out.println("handleGoToRecentLogMenuItem");
+		try {
+			manager.switchTo(LayoutsEnum.RecentLogLayout);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
 	}
 	
 	@FXML
 	private void handleGoToNoReturnedMenuItem() {
-		System.out.println("handleGoToNoReturnedMenuItem");
+		try {
+			manager.switchTo(LayoutsEnum.NoReturnedLayout);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
 	}
 	
 	@FXML
 	private void handleGoToAddNewBookMenuItem() {
-		System.out.println("handleGoToAddNewBookMenuItem");
+		try {
+			manager.switchTo(LayoutsEnum.AddNewBookLayout);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
 	}
 	
 	@FXML
 	private void handleGoToGetDetailBookInfoMenuItem() {
-		System.out.println("handleGoToGetDetailBookInfoMenuItem");
+		try {
+			manager.switchTo(LayoutsEnum.GetDetailBookInfoLayout);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
 	}
 	
 	@FXML
@@ -67,6 +89,7 @@ public class MenuComponent implements Initializable {
 	}
 	@Override
 	public void initialize(URL url, ResourceBundle bundlde) {
+		manager = StageManager.getInstance();
 	}
 
 }

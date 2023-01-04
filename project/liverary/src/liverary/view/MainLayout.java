@@ -140,6 +140,7 @@ public class MainLayout implements Initializable {
 		StageManager manager = StageManager.getInstance();
 		try {
 			manager.switchTo(LayoutsEnum.LoginLayout);
+			manager.freeAll();
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -179,7 +180,7 @@ public class MainLayout implements Initializable {
 	
 	@FXML
 	private void handleSearchTextFieldEntered() {
-		handleSearchBtn();
+		bookSearchBtn.fire();
 	}
 	
 	@FXML

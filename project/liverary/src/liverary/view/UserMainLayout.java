@@ -118,7 +118,7 @@ public class UserMainLayout implements Initializable {
 			row.setOnMouseClicked(event -> {
 				if (event.getClickCount() > 1) {
 					selectedBook = row.getItem();	
-					handleDetailInfoBtn();
+					detailInfoBtn.fire();
 				} else {
 					selectedBook = row.getItem();	
 				}
@@ -137,6 +137,7 @@ public class UserMainLayout implements Initializable {
 		StageManager manager = StageManager.getInstance();
 		try {
 			manager.switchTo(LayoutsEnum.LoginLayout);
+			manager.freeAll();
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -176,7 +177,7 @@ public class UserMainLayout implements Initializable {
 	
 	@FXML
 	private void handleSearchTextFieldEntered() {
-		handleSearchBtn();
+		bookSearchBtn.fire();
 	}
 	
 	@FXML
@@ -213,6 +214,22 @@ public class UserMainLayout implements Initializable {
 		Parent modalRoot = null;
 		try {
 			FXMLLoader loader = new FXMLLoader(getClass().getResource("userHistoryModalFXML.fxml"));
+			modalRoot = loader.load();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+		Stage dialog = new Stage(StageStyle.UTILITY);
+		dialog.setScene(new Scene(modalRoot));
+		Platform.runLater(() -> {
+			dialog.showAndWait();
+		});
+	}
+	
+	@FXML
+	private void handleEditAccountInfoLink() {
+		Parent modalRoot = null;
+		try {
+			FXMLLoader loader = new FXMLLoader(getClass().getResource("userEditModalFXML.fxml"));
 			modalRoot = loader.load();
 		} catch (IOException e) {
 			e.printStackTrace();

@@ -62,7 +62,7 @@
                         <Font size="13.0" />
                      </font>
                   </Hyperlink>
-                  <Hyperlink fx:id="editAccountInfoLink" text="회원정보 수정">
+                  <Hyperlink fx:id="editAccountInfoLink" onAction="#handleEditAccountInfoLink" text="회원정보 수정">
                      <font>
                         <Font size="13.0" />
                      </font>

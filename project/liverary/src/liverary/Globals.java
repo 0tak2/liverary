@@ -60,4 +60,8 @@ public class Globals {
 	public static String getCurrentSessionUsername() {
 		return currentSession.getAusername();
 	}
+	
+	public static String getCurrentSessionPassword() {
+		return currentSession.getApassword();
+	}
 }
