@@ -35,6 +35,7 @@ public class SearchAccountsModal implements Initializable {
 	public SearchAccountsModal() {
 	}
 	
+	@SuppressWarnings("unchecked")
 	@Override
 	public void initialize(URL url, ResourceBundle bundle) {
 		searchByComboBox.getItems().removeAll(searchByComboBox.getItems());

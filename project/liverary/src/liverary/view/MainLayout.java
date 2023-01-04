@@ -64,14 +64,13 @@ public class MainLayout implements Initializable {
 	
 	private Node menuComponent; 
 	
-	private AccountVO currentSession;
-	
 	private String bookSearchByType;
 	
 	private SearchAccountsModal controller;
 	private AccountVO selectedAccount;
 	private LoanVO selectedBook;
 	
+	@SuppressWarnings("unchecked")
 	@Override
 	public void initialize(URL arg0, ResourceBundle arg1) {
 		// 상단 메뉴 추가
@@ -87,9 +86,8 @@ public class MainLayout implements Initializable {
 		todayLabel.setText(DateHelper.todayDateStr());
 		dueDateLabel.setText("반납예정일: " + DateHelper.AddDaysToTodayDateStr(7));
 		// 오른쪽
-		currentSession = Globals.getCurrentSession();
-		greetingLabel.setText(currentSession.getAname() + "(" + currentSession.getAusername() + ")님 반갑습니다.");
-		additionalInfoLabel.setText(currentSession.getAdepartment() + " | 권한" + currentSession.getAlevel());
+		greetingLabel.setText(Globals.getCurrentSessionName() + "(" + Globals.getCurrentSessionUsername() + ")님 반갑습니다.");
+		additionalInfoLabel.setText(Globals.getCurrentSessionDepartment() + " | 권한" + Globals.getCurrentSessionLevel());
 		
 		// 콤보박스 초기화
 		bookSerachByCombobox.getItems().removeAll(bookSerachByCombobox.getItems());

@@ -46,7 +46,6 @@ public class AccountVO {
 	public AccountVO(String aname, String abirth, String acreatedAt, String aphone,
 			String aemail, String aaddr, int apoint, int alevel, String ausername, String apassword) {
 		super();
-		this.ano = ano;
 		this.aname = aname;
 		this.abirth = abirth;
 		this.acreatedAt = acreatedAt;

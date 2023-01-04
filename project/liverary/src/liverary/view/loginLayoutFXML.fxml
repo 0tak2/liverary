@@ -14,7 +14,7 @@
 
 <VBox maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="200.0" prefWidth="450.0" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1" fx:controller="liverary.view.LoginLayout">
    <children>
-      <Label alignment="CENTER" prefHeight="0.0" prefWidth="500.0" text="라이브' 러리 로그인" textAlignment="CENTER">
+      <Label alignment="CENTER" prefHeight="0.0" prefWidth="500.0" text="LIVE'rary 로그인" textAlignment="CENTER">
          <font>
             <Font name="Malgun Gothic Bold" size="27.0" />
          </font>

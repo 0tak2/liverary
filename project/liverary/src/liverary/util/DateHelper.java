@@ -21,4 +21,9 @@ public class DateHelper {
 		Period diff = Period.between(targetDate, todayDate);
 		return diff.getDays();
 	}
+	
+	public static int getDifferenceBetween(LocalDate returnedDate, LocalDate dueDate) {
+		Period diff = Period.between(dueDate, returnedDate);
+		return diff.getDays();
+	}
 }

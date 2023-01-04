@@ -120,7 +120,7 @@
             </FlowPane>
          </children>
       </HBox>
-      <TableView fx:id="bookSearchTableView" prefHeight="384.0" prefWidth="900.0">
+      <TableView fx:id="bookSearchTableView" prefHeight="384.0" prefWidth="900.0" VBox.vgrow="ALWAYS">
          <VBox.margin>
             <Insets top="7.0" />
          </VBox.margin></TableView>

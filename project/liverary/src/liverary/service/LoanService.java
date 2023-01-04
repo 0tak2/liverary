@@ -4,13 +4,16 @@ import java.sql.Connection;
 import java.sql.SQLException;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
+import java.util.HashMap;
 
+import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import liverary.dao.AccountDAO;
 import liverary.dao.DBCPConnectionPool;
 import liverary.dao.LoanDAO;
 import liverary.util.DateHelper;
 import liverary.vo.AccountVO;
+import liverary.vo.LoanByAccountVO;
 import liverary.vo.LoanVO;
 
 public class LoanService {
@@ -144,6 +147,87 @@ public class LoanService {
 			penalty = true;
 		}
 		return penalty;
+	}
+	
+	public ObservableList<LoanByAccountVO> selectLoanRowOfAccount(int ano) {
+		Connection con = null;
+		try {
+			con = DBCPConnectionPool.getDataSource().getConnection();
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		
+		LoanDAO dao = new LoanDAO(con);
+		ObservableList<LoanByAccountVO> list = dao.selectByAno(ano);
+		
+		try {
+			con.close();
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		
+		return list;
+	}
+
+	public HashMap<String, Integer> selectLoanStatusOfAccount(int ano) {
+		ObservableList<LoanByAccountVO> list = selectLoanRowOfAccount(ano);
+		
+		int total = 0;
+		int penalty = 0;
+		int normal = 0;
+		if (list != null) {
+			for (LoanByAccountVO row : list) {
+				if (row.getLreturnedAt() == null) {
+					total++;
+					LocalDate dueDate = LocalDate.parse(row.getLduedate(), DateTimeFormatter.ISO_DATE);
+					if (DateHelper.getDifferenceByToday(dueDate) > 0) {
+						penalty++;
+					}
+				}
+			}
+			normal = total - penalty;
+		}
+		
+		HashMap<String, Integer> result = new HashMap<>();
+		result.put("TOTAL", total);
+		result.put("PENALTY", penalty);
+		result.put("NORMAL", normal);
+		
+		return result;
+	}
+
+	public ObservableList<LoanVO> selectLoanBookRowsOfAccount(int ano) {
+		Connection con = null;
+		try {
+			con = DBCPConnectionPool.getDataSource().getConnection();
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		
+		LoanDAO dao = new LoanDAO(con);
+		ObservableList<LoanVO> listBeforeProcessed = dao.selectBookByAno(ano);
+		ObservableList<LoanVO> list = FXCollections.observableArrayList();
+		for (LoanVO row : listBeforeProcessed) {
+			if (row.getAvailable_kor().equals("반납완료")) {
+				System.out.println(row.getBtitle());
+				LocalDate returnedDate = LocalDate.parse(row.getLreturnedAt(), DateTimeFormatter.ISO_DATE);
+				LocalDate dueDate = LocalDate.parse(row.getLduedate(), DateTimeFormatter.ISO_DATE);
+				if (DateHelper.getDifferenceBetween(returnedDate, dueDate) > 0) {
+					row.setAvailable_kor("반납완료 (연체)");
+				} else {
+					row.setAvailable_kor("반납완료 (정상)");
+				}
+			}
+			list.add(row);
+		}
+		
+		try {
+			con.close();
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		
+		return list;
 	}
 
 }
