@@ -16,7 +16,6 @@ public class MenuComponent implements Initializable {
 	@FXML private MenuItem goToNoReturnedMenuItem;
 	@FXML private MenuItem goToAddNewBookMenuItem;
 	@FXML private MenuItem goToGetDetailBookInfoMenuItem;
-	@FXML private MenuItem goToEditBookInfoMenuItem;
 	@FXML private MenuItem goToRegisterStaffAccountMenuItem;
 	@FXML private MenuItem goToEditStaffAccountMenuItem;
 	
@@ -71,11 +70,6 @@ public class MenuComponent implements Initializable {
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-	}
-	
-	@FXML
-	private void handleGoToEditBookInfoMenuItem() {
-		System.out.println("handleGoToEditBookInfoMenuItem");
 	}
 	
 	@FXML

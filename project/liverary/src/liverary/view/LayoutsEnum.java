@@ -8,7 +8,6 @@ public enum LayoutsEnum {
 	NoReturnedLayout, /* [사서] 열람업무 - 미반납자료조회/반납독촉 */
 	AddNewBookLayout, /* [사서] 수서업무 - 자료입수 */
 	GetDetailBookInfoLayout, /* [사서] 자료관리 - 자료상세조회 */
-	EditBookInfoLayout, /* [사서] 자료관리 - 서지사항수정 */
 	RegisterStaffAccountLayout, /* [사서] 회원관리 - 직원등록 */
 	EditStaffAccountLayout /* [사서] 회원관리 - 직원조회/수정 */
 }

@@ -7,6 +7,7 @@ import java.sql.SQLException;
 
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import liverary.vo.AccountVO;
 import liverary.vo.BookVO;
 
 public class BookDAO {
@@ -93,5 +94,33 @@ ObservableList<BookVO> list = null;
 		}
 		
 		return affectedRows;
+	}
+
+	public BookVO selectOneByISBN(String isbn) {
+		BookVO book = null;
+	
+		try {
+			String sql = "SELECT * "
+					+ "FROM booksTBL "
+					+ "WHERE bisbn = ?";
+			PreparedStatement pstmt = con.prepareStatement(sql);
+			pstmt.setString(1, isbn);
+			ResultSet rs = pstmt.executeQuery();
+			
+			if (!rs.isBeforeFirst() ) {    
+				return null;
+			} else {
+				rs.next();
+				book = new BookVO(rs.getString("bisbn"), rs.getString("btitle"), 
+						rs.getInt("bprice"), rs.getString("bauthor"), rs.getString("btranslator"),
+						rs.getString("bpublisher"), rs.getString("bdate"), rs.getInt("bpage"), 
+						rs.getString("bsupplement"));
+			}
+			
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		
+		return book;
 	}
 }

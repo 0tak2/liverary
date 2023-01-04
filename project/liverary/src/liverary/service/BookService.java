@@ -4,11 +4,9 @@ import java.sql.Connection;
 import java.sql.SQLException;
 
 import javafx.collections.ObservableList;
-import liverary.dao.AccountDAO;
 import liverary.dao.BookDAO;
 import liverary.dao.DBCPConnectionPool;
 import liverary.vo.BookVO;
-import liverary.vo.LoanVO;
 
 public class BookService {
 
@@ -81,6 +79,26 @@ public class BookService {
 		}
 		
 		return result;
+	}
+
+	public BookVO selectABookByISBN(String isbn) {
+		Connection con = null;
+		try {
+			con = DBCPConnectionPool.getDataSource().getConnection();
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		
+		BookDAO dao = new BookDAO(con);
+		BookVO book = dao.selectOneByISBN(isbn);
+		
+		try {
+			con.close();
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		
+		return book;
 	}
 
 }
