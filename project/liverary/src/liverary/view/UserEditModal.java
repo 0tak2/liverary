@@ -73,7 +73,10 @@ public class UserEditModal implements Initializable {
 			return;
 		}
 
-		AccountVO newAccount = new AccountVO(ano, name, null, phone, email, addr, password);
+		AccountVO newAccount = new AccountVO(ano, name, null, Globals.getCurrentSessionBirth(),
+				Globals.getCurrentSessionCreatedAt(), phone, email, addr,
+				Globals.getCurrentSessionPoint(), Globals.getCurrentSessionLevel(),
+				Globals.getCurrentSessionUsername(), password);
 		
 		UpdateAccountController controller = new UpdateAccountController();
 		boolean success = controller.exec(newAccount);

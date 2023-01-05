@@ -32,7 +32,7 @@ public class LoanDAO {
 					+ "FROM BOOKSTBL B "
 					+ "LEFT JOIN (SELECT L2.lno AS lno, bisbn, ano, lcreatedAt, ldueDate, lreturnedAt FROM LOANRECORDTBL L1 "
 					+ "INNER JOIN (SELECT MAX(lno) AS lno FROM LOANRECORDTBL GROUP BY bisbn) L2 "
-					+ "WHERE L1.lno = L2.lno) L "
+					+ "ON L1.lno = L2.lno) L "
 					+ "ON B.BISBN = L.BISBN "
 					+ "WHERE B.bisbn = ?"
 					+ "ORDER BY B.btitle";
@@ -83,7 +83,7 @@ public class LoanDAO {
 					+ "FROM BOOKSTBL B "
 					+ "LEFT JOIN (SELECT L2.lno AS lno, bisbn, ano, lcreatedAt, ldueDate, lreturnedAt FROM LOANRECORDTBL L1 "
 					+ "INNER JOIN (SELECT MAX(lno) AS lno FROM LOANRECORDTBL GROUP BY bisbn) L2 "
-					+ "WHERE L1.lno = L2.lno) L "
+					+ "ON L1.lno = L2.lno) L "
 					+ "ON B.BISBN = L.BISBN "
 					+ "WHERE B.btitle LIKE ?"
 					+ "ORDER BY B.btitle";
