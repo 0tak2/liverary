@@ -113,7 +113,7 @@ public class LoanService {
 		int updateLoanAffectedRows = loanDao.update(row);
 		
 		AccountDAO accountDao = new AccountDAO(con);
-		AccountVO account = accountDao.select(row.getAno());
+		AccountVO account = accountDao.selectByNo(row.getAno());
 
 		int updateAccountAffectedRows = 0;
 		if (!penalty) { // 정상 반납
@@ -177,7 +177,7 @@ public class LoanService {
 		int normal = 0;
 		if (list != null) {
 			for (LoanByAccountVO row : list) {
-				if (row.getLreturnedAt() == null) {
+				if (row.getLcreatedat() != null && row.getLreturnedAt() == null) { // 대출 기록이 있지만 반납되지 않은 경우
 					total++;
 					LocalDate dueDate = LocalDate.parse(row.getLduedate(), DateTimeFormatter.ISO_DATE);
 					if (DateHelper.getDifferenceByToday(dueDate) > 0) {

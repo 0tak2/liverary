@@ -69,9 +69,13 @@ public class RecentLogLayout implements Initializable {
 	private String startDate;
 	private String endDate;
 	
+	private boolean startup;
+	
 	@SuppressWarnings("unchecked")
 	@Override
 	public void initialize(URL arg0, ResourceBundle arg1) {
+		startup = true;
+		
 		// 상단 메뉴 추가
 		try {
 			menuComponent = FXMLLoader.load(getClass().getResource("menuComponentFXML.fxml"));
@@ -130,12 +134,13 @@ public class RecentLogLayout implements Initializable {
 				lentAtColumn, isbnColumn, titleColumn, authorColumn, publisherColumn, returnedDateColumn, statusColumn);
 		
 		bookSearchBtn.fire();
+		startup = false;
 	}
 	
 	private void setDataToTableViewByKeyword() {
 		GetLoanBookRecordsByKeywordController controller = new GetLoanBookRecordsByKeywordController();
 		ObservableList<LoanVO> list = controller.exec(bookSearchKeywordTextField.getText(), startDate, endDate);
-		if (list.isEmpty()) {
+		if (list.isEmpty() && !startup) {
 			(new Alert(
 					AlertType.WARNING, "조건에 맞는 자료를 찾을 수 없습니다.")).showAndWait();
 		} else {
@@ -148,7 +153,7 @@ public class RecentLogLayout implements Initializable {
 	private void setDataToTableViewByISBN() {
 		GetLoanBookRecordsByISBNController controller = new GetLoanBookRecordsByISBNController();
 		ObservableList<LoanVO> list = controller.exec(bookSearchKeywordTextField.getText(), startDate, endDate);
-		if (list.isEmpty()) {
+		if (list.isEmpty() && !startup) {
 			(new Alert(
 					AlertType.WARNING, "조건에 맞는 자료를 찾을 수 없습니다.")).showAndWait();
 		} else {

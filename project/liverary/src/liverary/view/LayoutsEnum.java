@@ -9,5 +9,5 @@ public enum LayoutsEnum {
 	AddNewBookLayout, /* [사서] 수서업무 - 자료입수 */
 	GetDetailBookInfoLayout, /* [사서] 자료관리 - 자료상세조회 */
 	RegisterStaffAccountLayout, /* [사서] 회원관리 - 직원등록 */
-	EditStaffAccountLayout /* [사서] 회원관리 - 직원조회/수정 */
+	GetDetailStaffAccountLayout /* [사서] 회원관리 - 직원조회/수정 */
 }

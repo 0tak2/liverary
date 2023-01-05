@@ -51,6 +51,7 @@ public class UserRegisterModal implements Initializable {
 		} else {
 			(new Alert(
 					AlertType.ERROR, username + "은(는) 아이디로 사용할 수 없습니다. 다른 아이디를 입력해주세요.")).showAndWait();
+			verified = false;
 		}
 	}
 	

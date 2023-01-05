@@ -58,6 +58,7 @@ public class GetDetailBookInfoLayout implements Initializable {
 	@SuppressWarnings("unchecked")
 	@Override
 	public void initialize(URL url, ResourceBundle bundle) {
+		
 		// 상단 메뉴 추가
 		try {
 			menuComponent = FXMLLoader.load(getClass().getResource("menuComponentFXML.fxml"));
@@ -78,11 +79,11 @@ public class GetDetailBookInfoLayout implements Initializable {
 		
 		// 테이블 뷰 초기화
 		TableColumn<BookVO, String> isbnColumn = new TableColumn<>("ISBN");
-		isbnColumn.setMinWidth(75);
+		isbnColumn.setMinWidth(120);
 		isbnColumn.setCellValueFactory(new PropertyValueFactory<>("bisbn"));
 		
 		TableColumn<BookVO, String> titleColumn = new TableColumn<>("표제");
-		titleColumn.setMinWidth(75);
+		titleColumn.setMinWidth(250);
 		titleColumn.setCellValueFactory(new PropertyValueFactory<>("btitle"));
 		
 		TableColumn<BookVO, String> dateColumn = new TableColumn<>("발간연월");
@@ -227,6 +228,7 @@ public class GetDetailBookInfoLayout implements Initializable {
 		dialog.setScene(new Scene(modalRoot));
 		Platform.runLater(() -> {
 			dialog.showAndWait();
+			bookSearchBtn.fire();
 		});
 	}
 

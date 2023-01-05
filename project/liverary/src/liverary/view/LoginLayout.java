@@ -59,9 +59,9 @@ public class LoginLayout implements Initializable {
 			passwordTextField.clear();
 			try {
 				if (account.getAlevel() > 0) {
-					manager.switchTo(LayoutsEnum.MainLayout);					
+					manager.switchToWithHide(LayoutsEnum.MainLayout);					
 				} else {
-					manager.switchTo(LayoutsEnum.UserMainLayout);
+					manager.switchToWithHide(LayoutsEnum.UserMainLayout);
 				}
 			} catch (Exception e) {
 				e.printStackTrace();

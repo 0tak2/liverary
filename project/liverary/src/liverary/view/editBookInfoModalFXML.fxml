@@ -71,7 +71,7 @@
             <Label text="딸림자료" GridPane.rowIndex="7" />
             <Label text="출판사" GridPane.rowIndex="8" />
             <Label text="주저자" GridPane.rowIndex="5" />
-            <TextField fx:id="isbnTextField" GridPane.columnIndex="1" />
+            <TextField fx:id="isbnTextField" disable="true" GridPane.columnIndex="1" />
             <TextField fx:id="titleTextField" GridPane.columnIndex="1" GridPane.rowIndex="1" />
             <TextField fx:id="pageTextField" GridPane.columnIndex="1" GridPane.rowIndex="3" />
             <TextField fx:id="priceTextField" GridPane.columnIndex="1" GridPane.rowIndex="4" />

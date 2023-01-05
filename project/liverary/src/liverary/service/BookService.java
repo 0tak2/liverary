@@ -101,4 +101,62 @@ public class BookService {
 		return book;
 	}
 
+	public boolean updateBook(BookVO book) {
+		boolean result = false;
+		Connection con = null;
+		try {
+			con = DBCPConnectionPool.getDataSource().getConnection();
+			con.setAutoCommit(false);
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		
+		BookDAO dao = new BookDAO(con);
+		int affectedRows = dao.update(book);
+		
+		try {
+			if (affectedRows == 1) {
+				result = true;
+				con.commit();
+			} else {
+				result = false;
+				con.rollback();
+			}
+			con.close();
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		
+		return result;
+	}
+
+	public boolean deleteBook(String isbn) {
+		boolean result = false;
+		Connection con = null;
+		try {
+			con = DBCPConnectionPool.getDataSource().getConnection();
+			con.setAutoCommit(false);
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		
+		BookDAO dao = new BookDAO(con);
+		int affectedRows = dao.delete(isbn);
+		
+		try {
+			if (affectedRows == 1) {
+				result = true;
+				con.commit();
+			} else {
+				result = false;
+				con.rollback();
+			}
+			con.close();
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		
+		return result;
+	}
+
 }

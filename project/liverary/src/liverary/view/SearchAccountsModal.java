@@ -19,6 +19,7 @@ import javafx.scene.control.TextField;
 import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.stage.Stage;
+import liverary.controller.GetAccountsByNameController;
 import liverary.controller.GetAccountByUsernameController;
 import liverary.vo.AccountVO;
 
@@ -92,11 +93,16 @@ public class SearchAccountsModal implements Initializable {
 		if (searchBy.equals("아이디")) {
 			GetAccountByUsernameController controller = new GetAccountByUsernameController();
 			AccountVO account = controller.exec(query);
-			ObservableList<AccountVO> list = FXCollections.observableArrayList();
-			list.add(account);
+			ObservableList<AccountVO> list = null;
+			if (account != null) {
+				list = FXCollections.observableArrayList();
+				list.add(account);				
+			}
 			searchTableView.setItems(list);
 		} else if (searchBy.equals("이름")) {
-			
+			GetAccountsByNameController controller = new GetAccountsByNameController();
+			ObservableList<AccountVO> list = controller.exec(query);
+			searchTableView.setItems(list);
 		}
 	}
 	

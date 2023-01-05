@@ -20,7 +20,7 @@
       </Menu>
       <Menu mnemonicParsing="false" text="자료관리">
          <items>
-            <MenuItem fx:id="goToGetDetailBookInfoMenuItem" mnemonicParsing="false" onAction="#handleGoToGetDetailBookInfoMenuItem" text="자료상세조회" />
+            <MenuItem fx:id="goToGetDetailBookInfoMenuItem" mnemonicParsing="false" onAction="#handleGoToGetDetailBookInfoMenuItem" text="자료상세조회/수정" />
          </items>
       </Menu>
       <Menu mnemonicParsing="false" text="계정관리">

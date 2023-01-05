@@ -38,6 +38,7 @@ public class LoanDAO {
 					+ "ORDER BY B.btitle";
 			PreparedStatement pstmt = con.prepareStatement(sql);
 			pstmt.setString(1, isbn);
+			
 			ResultSet rs = pstmt.executeQuery();
 			list = FXCollections.observableArrayList();
 			

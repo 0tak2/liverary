@@ -74,13 +74,22 @@ public class MenuComponent implements Initializable {
 	
 	@FXML
 	private void handleGoToRegisterStaffAccountMenuItem() {
-		System.out.println("handleGoToRegisterStaffAccountMenuItem");
+		try {
+			manager.switchTo(LayoutsEnum.RegisterStaffAccountLayout);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
 	}
 	
 	@FXML
 	private void handleGoToEditStaffAccountMenuItem() {
-		System.out.println("handleGoToEditStaffAccountMenuItem");
+		try {
+			manager.switchTo(LayoutsEnum.GetDetailStaffAccountLayout);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
 	}
+	
 	@Override
 	public void initialize(URL url, ResourceBundle bundlde) {
 		manager = StageManager.getInstance();

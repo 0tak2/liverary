@@ -108,13 +108,24 @@ public class AddNewBookLayout implements Initializable {
 		String title = titleTextField.getText();
 		String year = yearTextField.getText();
 		String month = monthTextField.getText();
-		int page = Integer.parseInt(pageTextField.getText());
-		int price = Integer.parseInt(priceTextField.getText());
+		String page_str = pageTextField.getText();
+		String price_str = priceTextField.getText();
 		String author = authorTextField.getText();
 		String translator = translatorTextField.getText();
 		String supplement = supplementTextField.getText();
 		String publisher = publisherTextField.getText();
 		
+		if ("".equals(isbn) || "".equals(title) || "".equals(year) ||
+				 "".equals(month) || "".equals(page_str) || "".equals(price_str) ||
+				 "".equals(author) || "".equals(publisher)) {
+			(new Alert(
+					AlertType.ERROR, "항목을 빠짐없이 입력해주세요. 역자와 딸림자료만 공란으로 남길 수 있습니다.")).showAndWait();
+			return;
+		}
+		
+		int page = Integer.parseInt(page_str);
+		int price = Integer.parseInt(price_str);
+			
 		BookVO newBook = new BookVO(isbn, title, price, author, translator, publisher,
 				(year + "년 " + month + "월"), page, supplement);
 		

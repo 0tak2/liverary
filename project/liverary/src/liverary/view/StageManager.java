@@ -110,17 +110,21 @@ public class StageManager {
 		putFXMLProperty(LayoutsEnum.LoginLayout, new FXMLProperty(getClass().getResource("loginLayoutFXML.fxml"),
 							400, 230, "로그인"));
 		putFXMLProperty(LayoutsEnum.UserMainLayout, new FXMLProperty(getClass().getResource("userMainLayoutFXML.fxml"),
-				900, 600, "라이브'러리 메인"));
+				900, 700, "라이브'러리 메인"));
 		putFXMLProperty(LayoutsEnum.MainLayout, new FXMLProperty(getClass().getResource("mainLayoutFXML.fxml"),
-				900, 600, "반납/대출"));
+				900, 700, "반납/대출"));
 		putFXMLProperty(LayoutsEnum.RecentLogLayout, new FXMLProperty(getClass().getResource("recentLogLayoutFXML.fxml"),
-				900, 600, "최근 자료 이용 이력"));
+				900, 700, "최근 자료 이용 이력"));
 		putFXMLProperty(LayoutsEnum.NoReturnedLayout, new FXMLProperty(getClass().getResource("noReturnedLayoutFXML.fxml"),
-				900, 600, "미반납 자료 조회"));
+				900, 700, "미반납 자료 조회"));
 		putFXMLProperty(LayoutsEnum.AddNewBookLayout, new FXMLProperty(getClass().getResource("addNewBookLayoutFXML.fxml"),
 				900, 700, "자료 입수"));
 		putFXMLProperty(LayoutsEnum.GetDetailBookInfoLayout, new FXMLProperty(getClass().getResource("getDetailBookInfoLayoutFXML.fxml"),
-				900, 700, "자료 상세 조회"));
+				900, 700, "자료 상세 조회 및 수정/삭제"));
+		putFXMLProperty(LayoutsEnum.RegisterStaffAccountLayout, new FXMLProperty(getClass().getResource("registerStaffAccountLayoutFXML.fxml"),
+				900, 700, "직원 계정 등록"));
+		putFXMLProperty(LayoutsEnum.GetDetailStaffAccountLayout, new FXMLProperty(getClass().getResource("getDetailStaffAccountLayoutFXML.fxml"),
+				900, 700, "직원 계정 상세 조회 및 수정/삭제"));
 	}
 	
 	public void switchTo(LayoutsEnum key) throws Exception {
@@ -145,6 +149,33 @@ public class StageManager {
 		} catch (NullPointerException e) {
 			throw new NullPointerException("stage가 null입니다. 아직 Stage의 객체가 주입되지 않았습니다.");
 		}
+	}
+	
+	public void switchToWithHide(LayoutsEnum key) throws Exception {
+		FXMLProperty fxmlProperty = getFXMLProperty(key);
+		Parent root = this.parentMap.get(key);
+		if (root == null) {
+			root = FXMLLoader.load(fxmlProperty.getUrl());
+			this.parentMap.put(key, root);
+		}
+		
+		stage.hide();
+		stage.setWidth(fxmlProperty.getPrefWidth());
+		stage.setHeight(fxmlProperty.getPrefHeight());
+		stage.setTitle(fxmlProperty.getTitle());
+		
+		try {
+			if (scene == null) {
+				scene = new Scene(root);
+				stage.setScene(scene);
+			} else {
+				scene.setRoot(root);
+			}
+		} catch (NullPointerException e) {
+			throw new NullPointerException("stage가 null입니다. 아직 Stage의 객체가 주입되지 않았습니다.");
+		}
+		
+		stage.show();
 	}
 	
 	public void freeParent(LayoutsEnum key) {

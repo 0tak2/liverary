@@ -105,6 +105,7 @@ ObservableList<BookVO> list = null;
 					+ "WHERE bisbn = ?";
 			PreparedStatement pstmt = con.prepareStatement(sql);
 			pstmt.setString(1, isbn);
+
 			ResultSet rs = pstmt.executeQuery();
 			
 			if (!rs.isBeforeFirst() ) {    
@@ -122,5 +123,47 @@ ObservableList<BookVO> list = null;
 		}
 		
 		return book;
+	}
+	
+	public int update(BookVO book) {
+		int affectedRows = 0;
+		try {
+			String sql = "UPDATE `booksTBL` SET btitle = ?, bdate = ?, bpage = ?, "
+					+ "bprice = ?, bauthor = ?, btranslator = ?, bsupplement = ?, bpublisher = ? "
+					+ "WHERE bisbn = ?";
+			PreparedStatement pstmt = con.prepareStatement(sql);
+			
+			pstmt.setString(1, book.getBtitle());
+			pstmt.setString(2, book.getBdate());
+			pstmt.setInt(3, book.getBpage());
+			pstmt.setInt(4, book.getBprice());
+			pstmt.setString(5, book.getBauthor());
+			pstmt.setString(6, book.getBtranslator());
+			pstmt.setString(7, book.getBsupplement());
+			pstmt.setString(8, book.getBpublisher());
+			pstmt.setString(9, book.getBisbn());
+
+			affectedRows = pstmt.executeUpdate();
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		
+		return affectedRows;
+	}
+
+	public int delete(String isbn) {
+		int affectedRows = 0;
+		try {
+			String sql = "DELETE FROM `booksTBL`"
+					+ "WHERE bisbn = ?";
+			PreparedStatement pstmt = con.prepareStatement(sql);
+			pstmt.setString(1, isbn);
+
+			affectedRows = pstmt.executeUpdate();
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		
+		return affectedRows;
 	}
 }

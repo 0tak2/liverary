@@ -59,6 +59,23 @@ public class AccountVO {
 		this.apassword = apassword;
 	}
 	
+	// 직원 인서트용
+	public AccountVO(String aname, String abirth, String acreatedAt, String aphone,
+			String aemail, String aaddr, String adepartment, int apoint, int alevel, String ausername, String apassword) {
+		super();
+		this.aname = aname;
+		this.abirth = abirth;
+		this.acreatedAt = acreatedAt;
+		this.aphone = aphone;
+		this.aemail = aemail;
+		this.aaddr = aaddr;
+		this.adepartment = adepartment;
+		this.apoint = apoint;
+		this.alevel = alevel;
+		this.ausername = ausername;
+		this.apassword = apassword;
+	}
+	
 	public AccountVO(int ano, String aname, String abirth, String acreatedAt, String aphone,
 			String aemail, String aaddr, int apoint, int alevel, String ausername, String apassword) {
 		super();

@@ -136,7 +136,7 @@ public class UserMainLayout implements Initializable {
 		Globals.setCurrentSession(null);
 		StageManager manager = StageManager.getInstance();
 		try {
-			manager.switchTo(LayoutsEnum.LoginLayout);
+			manager.switchToWithHide(LayoutsEnum.LoginLayout);
 			manager.freeAll();
 		} catch (Exception e) {
 			e.printStackTrace();
