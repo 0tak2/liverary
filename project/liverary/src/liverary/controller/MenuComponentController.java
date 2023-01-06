@@ -1,4 +1,4 @@
-package liverary.view;
+package liverary.controller;
 
 import java.net.URL;
 import java.util.ResourceBundle;
@@ -8,8 +8,10 @@ import javafx.fxml.Initializable;
 import javafx.scene.control.Hyperlink;
 import javafx.scene.control.Label;
 import javafx.scene.control.MenuItem;
+import liverary.view.LayoutsEnum;
+import liverary.view.StageManager;
 
-public class MenuComponent implements Initializable {
+public class MenuComponentController implements Initializable {
 	
 	@FXML private MenuItem goToMainMenuItem;
 	@FXML private MenuItem goToRecentLogMenuItem;

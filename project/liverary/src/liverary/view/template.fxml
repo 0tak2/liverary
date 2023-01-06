@@ -37,7 +37,7 @@
 <?import javafx.scene.control.MenuItem?>
 <?import javafx.scene.layout.VBox?>
 
-<VBox prefHeight="552.0" prefWidth="1157.0" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1" fx:controller="liverary.view.MainLayout">
+<VBox prefHeight="552.0" prefWidth="1157.0" xmlns="http://javafx.com/javafx" xmlns:fx="http://javafx.com/fxml" fx:controller="liverary.view.MainLayout">
   <children>
     <MenuBar VBox.vgrow="NEVER">
       <menus>

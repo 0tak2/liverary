@@ -1,4 +1,4 @@
-package liverary.view;
+package liverary.controller;
 
 import java.io.IOException;
 import java.net.URL;
@@ -27,12 +27,12 @@ import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
 import liverary.Globals;
-import liverary.controller.GetBooksByISBNController;
-import liverary.controller.GetBooksByKeywordController;
+import liverary.service.BookService;
+import liverary.view.LayoutsEnum;
+import liverary.view.StageManager;
 import liverary.vo.BookVO;
-import liverary.vo.LoanVO;
 
-public class GetDetailBookInfoLayout implements Initializable {
+public class GetDetailBookInfoLayoutController implements Initializable {
 
 	@FXML private VBox rootVBox;
 	
@@ -61,7 +61,7 @@ public class GetDetailBookInfoLayout implements Initializable {
 		
 		// 상단 메뉴 추가
 		try {
-			menuComponent = FXMLLoader.load(getClass().getResource("menuComponentFXML.fxml"));
+			menuComponent = FXMLLoader.load(getClass().getResource("../view/menuComponentFXML.fxml"));
 			rootVBox.getChildren().add(0, menuComponent);
 		} catch (IOException e1) {
 			e1.printStackTrace();
@@ -122,8 +122,8 @@ public class GetDetailBookInfoLayout implements Initializable {
 	}
 	
 	private void setDataToTableViewByKeyword() {
-		GetBooksByKeywordController controller = new GetBooksByKeywordController();
-		ObservableList<BookVO> list = controller.exec(bookSearchKeywordTextField.getText());
+		BookService service = new BookService();
+		ObservableList<BookVO> list = service.selectBooksByKeyword(bookSearchKeywordTextField.getText());
 		if (list.isEmpty()) {
 			(new Alert(
 					AlertType.WARNING, "조건에 맞는 자료를 찾을 수 없습니다.")).showAndWait();
@@ -135,8 +135,8 @@ public class GetDetailBookInfoLayout implements Initializable {
 	}
 	
 	private void setDataToTableViewByISBN() {
-		GetBooksByISBNController controller = new GetBooksByISBNController();
-		ObservableList<BookVO> list = controller.exec(bookSearchKeywordTextField.getText());
+		BookService service = new BookService();
+		ObservableList<BookVO> list = service.selectBooksByISBN(bookSearchKeywordTextField.getText());
 		if (list.isEmpty()) {
 			(new Alert(
 					AlertType.WARNING, "조건에 맞는 자료를 찾을 수 없습니다.")).showAndWait();
@@ -215,9 +215,9 @@ public class GetDetailBookInfoLayout implements Initializable {
 		}
 		
 		Parent modalRoot = null;
-		EditBookInfoModal controller = null;
+		EditBookInfoModalController controller = null;
 		try {
-			FXMLLoader loader = new FXMLLoader(getClass().getResource("editBookInfoModalFXML.fxml"));
+			FXMLLoader loader = new FXMLLoader(getClass().getResource("../view/editBookInfoModalFXML.fxml"));
 			modalRoot = loader.load();
 			controller = loader.getController();
 		} catch (IOException e) {

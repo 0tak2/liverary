@@ -1,4 +1,4 @@
-package liverary.view;
+package liverary.controller;
 
 import java.io.IOException;
 import java.net.URL;
@@ -30,17 +30,15 @@ import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
 import liverary.Globals;
-import liverary.controller.GetAccountByNoController;
-import liverary.controller.GetLoanRecordsByISBNController;
-import liverary.controller.GetLoanRecordsByKeywordController;
-import liverary.controller.IsThisReturnNeededPenalty;
-import liverary.controller.LendBookController;
-import liverary.controller.ReturnBookController;
+import liverary.service.AccountService;
+import liverary.service.LoanService;
 import liverary.util.DateHelper;
+import liverary.view.LayoutsEnum;
+import liverary.view.StageManager;
 import liverary.vo.AccountVO;
 import liverary.vo.LoanVO;
 
-public class MainLayout implements Initializable {
+public class MainLayoutController implements Initializable {
 
 	@FXML private VBox rootVBox;
 	
@@ -66,7 +64,7 @@ public class MainLayout implements Initializable {
 	
 	private String bookSearchByType;
 	
-	private SearchAccountsModal controller;
+	private SearchAccountsModalController controller;
 	private AccountVO selectedAccount;
 	private LoanVO selectedBook;
 	
@@ -75,7 +73,7 @@ public class MainLayout implements Initializable {
 	public void initialize(URL arg0, ResourceBundle arg1) {
 		// 상단 메뉴 추가
 		try {
-			menuComponent = FXMLLoader.load(getClass().getResource("menuComponentFXML.fxml"));
+			menuComponent = FXMLLoader.load(getClass().getResource("../view/menuComponentFXML.fxml"));
 			rootVBox.getChildren().add(0, menuComponent);
 		} catch (IOException e1) {
 			e1.printStackTrace();
@@ -160,16 +158,18 @@ public class MainLayout implements Initializable {
 			return;
 		}
 		if (bookSearchByType.equals("ISBN")) {
-			GetLoanRecordsByISBNController controller = new GetLoanRecordsByISBNController();
-			ObservableList<LoanVO> list = controller.exec(query);
+			LoanService service = new LoanService();
+			ObservableList<LoanVO> list = service.selectLoanRecordsByISBN(query);
+			
 			bookSearchTableView.setItems(list);
 			if (list.isEmpty()) {
 				(new Alert(
 						AlertType.WARNING, "조건에 맞는 자료를 찾을 수 없습니다.")).showAndWait();
 			}
 		} else if (bookSearchByType.equals("표제")) {
-			GetLoanRecordsByKeywordController controller = new GetLoanRecordsByKeywordController();
-			ObservableList<LoanVO> list = controller.exec(query);
+			LoanService service = new LoanService();
+			ObservableList<LoanVO> list = service.selectLoanRecordsByKeyword(query);
+			
 			bookSearchTableView.setItems(list);
 			if (list.isEmpty()) {
 				(new Alert(
@@ -188,7 +188,7 @@ public class MainLayout implements Initializable {
 		Parent modalRoot = null;
 		controller = null;
 		try {
-			FXMLLoader loader = new FXMLLoader(getClass().getResource("searchAccountsModalFXML.fxml"));
+			FXMLLoader loader = new FXMLLoader(getClass().getResource("../view/searchAccountsModalFXML.fxml"));
 			modalRoot = loader.load();
 			controller = loader.getController();
 		} catch (IOException e) {
@@ -221,8 +221,8 @@ public class MainLayout implements Initializable {
 		
 		if (selectedBook.isAvailable()) {
 			selectedBook.setAno(selectedAccount.getAno());
-			LendBookController controller = new LendBookController();
-			Boolean sucess = controller.exec(selectedBook);
+			LoanService service = new LoanService();
+			Boolean sucess = service.insertLoanRecord(selectedBook);
 			
 			if (sucess) {
 				String msg = "대출 처리에 성공하였습니다.\n\n"
@@ -256,11 +256,11 @@ public class MainLayout implements Initializable {
 			return;
 		}
 		
-		IsThisReturnNeededPenalty lcontroller1 = new IsThisReturnNeededPenalty();
-		boolean penalty = lcontroller1.exec(selectedBook);
+		LoanService loanService = new LoanService();
+		boolean penalty = loanService.getIsNeededPenalty(selectedBook);
 		if (penalty) {
-			GetAccountByNoController acontroller = new GetAccountByNoController();
-			AccountVO returnAccount = acontroller.exec(selectedBook.getAno());
+			AccountService service = new AccountService();
+			AccountVO returnAccount = service.selectAccountbyNO(selectedBook.getAno());
 			
 			String msg = "연체자료 알림\n\n"
 					+ "대상 자료: " + selectedBook.getBtitle() + "(" + selectedBook.getBisbn() + ")\n\n"
@@ -280,12 +280,11 @@ public class MainLayout implements Initializable {
 			
 		}
 		
-		ReturnBookController lcontroller2 = new ReturnBookController();
-		boolean sucess = lcontroller2.exec(selectedBook);
+		boolean sucess = loanService.updateLoanRecord(selectedBook);
 		
 		if (sucess) {
-			GetAccountByNoController accountController = new GetAccountByNoController();
-			AccountVO returnedAccount = accountController.exec(selectedBook.getAno());
+			AccountService accountService = new AccountService();
+			AccountVO returnedAccount = accountService.selectAccountbyNO(selectedBook.getAno());
 			String msg = "반납 처리에 성공하였습니다.\n\n"
 							+ "반납 자료: " + selectedBook.getBtitle() + "(" + selectedBook.getBisbn() + ")\n\n"
 									+ "이용자: " + returnedAccount.getAname() + "(" + returnedAccount.getAbirth() + ")";

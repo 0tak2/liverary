@@ -1,4 +1,4 @@
-package liverary.view;
+package liverary.controller;
 
 import java.net.URL;
 import java.util.ResourceBundle;
@@ -12,14 +12,12 @@ import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextField;
 import javafx.stage.Stage;
 import liverary.Globals;
-import liverary.controller.GetAccountByNoController;
-import liverary.controller.NewAccountController;
-import liverary.controller.UpdateAccountController;
-import liverary.controller.VerifyNewUsernameController;
-import liverary.util.DateHelper;
+import liverary.service.AccountService;
+import liverary.view.LayoutsEnum;
+import liverary.view.StageManager;
 import liverary.vo.AccountVO;
 
-public class UserEditModal implements Initializable {
+public class UserEditModalController implements Initializable {
 
 	@FXML private TextField nameTextField;
 	@FXML private TextField yearTextField;
@@ -78,8 +76,8 @@ public class UserEditModal implements Initializable {
 				Globals.getCurrentSessionPoint(), Globals.getCurrentSessionLevel(),
 				Globals.getCurrentSessionUsername(), password);
 		
-		UpdateAccountController controller = new UpdateAccountController();
-		boolean success = controller.exec(newAccount);
+		AccountService service = new AccountService();
+		boolean success = service.updateAccount(newAccount);
 		
 		if (success) {
 			(new Alert(

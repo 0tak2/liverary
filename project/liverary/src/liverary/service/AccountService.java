@@ -189,7 +189,7 @@ public class AccountService {
 		}
 		
 		LoanDAO daoL = new LoanDAO(con);
-		ObservableList<LoanVO> list = daoL.selectBookByAno(ano);
+		ObservableList<LoanVO> list = daoL.selectByAno(ano);
 		System.out.println(list.get(0).getLno());
 		for (LoanVO row : list) {
 			if(row.getLreturnedAt().equals("")) {

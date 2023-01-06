@@ -1,4 +1,4 @@
-package liverary.view;
+package liverary.controller;
 
 import java.net.URL;
 import java.util.ResourceBundle;
@@ -11,12 +11,11 @@ import javafx.scene.control.Button;
 import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextField;
 import javafx.stage.Stage;
-import liverary.controller.NewAccountController;
-import liverary.controller.VerifyNewUsernameController;
+import liverary.service.AccountService;
 import liverary.util.DateHelper;
 import liverary.vo.AccountVO;
 
-public class UserRegisterModal implements Initializable {
+public class UserRegisterModalController implements Initializable {
 
 	@FXML private TextField nameTextField;
 	@FXML private TextField yearTextField;
@@ -42,9 +41,16 @@ public class UserRegisterModal implements Initializable {
 	@FXML
 	private void handleVerifyBtn() {
 		String username = usernameTextField.getText();
-		VerifyNewUsernameController controller = new VerifyNewUsernameController();
-		boolean success = controller.exec(username);
-		if (success) {
+		
+		AccountService service = new AccountService();
+		AccountVO account = service.selectAccountbyUsername(username);
+		
+		boolean available = false;
+		if (account == null) {
+			available = true;
+		}
+		
+		if (available) {
 			(new Alert(
 					AlertType.INFORMATION, username + "은(는) 아이디로 사용 가능합니다.")).showAndWait();
 			verified = true;
@@ -93,8 +99,8 @@ public class UserRegisterModal implements Initializable {
 		AccountVO newAccount = new AccountVO(name, birth, DateHelper.todayDateStr(), phone,
 												email, addr, 0, 0, username, password);
 		
-		NewAccountController controller = new NewAccountController();
-		boolean success = controller.exec(newAccount);
+		AccountService service = new AccountService();
+		boolean success = service.insertNewAccount(newAccount);
 		
 		if (success) {
 			(new Alert(

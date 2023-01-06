@@ -1,13 +1,11 @@
-package liverary.view;
+package liverary.controller;
 
 import java.io.IOException;
 import java.net.URL;
 import java.util.HashMap;
-import java.util.Optional;
 import java.util.ResourceBundle;
 
 import javafx.application.Platform;
-import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -17,7 +15,6 @@ import javafx.scene.Scene;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.Button;
-import javafx.scene.control.ButtonType;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.Hyperlink;
 import javafx.scene.control.Label;
@@ -29,19 +26,12 @@ import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
 import liverary.Globals;
-import liverary.controller.GetAccountByNoController;
-import liverary.controller.GetCurrentLoanStatusController;
-import liverary.controller.GetLoanRecordsByISBNController;
-import liverary.controller.GetLoanRecordsByKeywordController;
-import liverary.controller.IsThisReturnNeededPenalty;
-import liverary.controller.LendBookController;
-import liverary.controller.ReturnBookController;
-import liverary.util.DateHelper;
-import liverary.vo.AccountVO;
-import liverary.vo.LoanByAccountVO;
+import liverary.service.LoanService;
+import liverary.view.LayoutsEnum;
+import liverary.view.StageManager;
 import liverary.vo.LoanVO;
 
-public class UserMainLayout implements Initializable {
+public class UserMainLayoutController implements Initializable {
 	
 	@FXML private Label loanStatusLabel;
 	@FXML private Hyperlink detailLink;
@@ -68,16 +58,19 @@ public class UserMainLayout implements Initializable {
 		
 		// 상단 위젯 초기화
 		// 왼쪽
-		GetCurrentLoanStatusController controller = new GetCurrentLoanStatusController();
-		HashMap<String, Integer> status = controller.exec(Globals.getCurrentSessionNo());
+		LoanService service = new LoanService();
+		HashMap<String, Integer> status = service.selectLoanStatusOfAccount(Globals.getCurrentSessionNo());
+		
 		int total = status.get("TOTAL");
 		int penalty = status.get("PENALTY");
 		int normal = status.get("NORMAL");
+		
 		StringBuffer msgBuff = new StringBuffer();
 		msgBuff.append("대출중: " + total + "건 (");
 		msgBuff.append("정상: " + normal + "건 ");
 		msgBuff.append("연체: " + penalty + "건)");
 		loanStatusLabel.setText(msgBuff.toString());
+		
 		// 오른쪽
 		greetingLabel.setText(Globals.getCurrentSessionName() + "(" + Globals.getCurrentSessionUsername() + ")님 반갑습니다.");
 		additionalInfoLabel.setText(Globals.getCurrentSessionPoint() + " 포인트");
@@ -157,16 +150,18 @@ public class UserMainLayout implements Initializable {
 			return;
 		}
 		if (bookSearchByType.equals("ISBN")) {
-			GetLoanRecordsByISBNController controller = new GetLoanRecordsByISBNController();
-			ObservableList<LoanVO> list = controller.exec(query);
+			LoanService service = new LoanService();
+			ObservableList<LoanVO> list = service.selectLoanRecordsByISBN(query);
+			
 			bookSearchTableView.setItems(list);
 			if (list.isEmpty()) {
 				(new Alert(
 						AlertType.WARNING, "조건에 맞는 자료를 찾을 수 없습니다.")).showAndWait();
 			}
 		} else if (bookSearchByType.equals("표제")) {
-			GetLoanRecordsByKeywordController controller = new GetLoanRecordsByKeywordController();
-			ObservableList<LoanVO> list = controller.exec(query);
+			LoanService service = new LoanService();
+			ObservableList<LoanVO> list = service.selectLoanRecordsByKeyword(query);
+
 			bookSearchTableView.setItems(list);
 			if (list.isEmpty()) {
 				(new Alert(
@@ -213,7 +208,7 @@ public class UserMainLayout implements Initializable {
 	private void handleDetailLink() {
 		Parent modalRoot = null;
 		try {
-			FXMLLoader loader = new FXMLLoader(getClass().getResource("userHistoryModalFXML.fxml"));
+			FXMLLoader loader = new FXMLLoader(getClass().getResource("../view/userHistoryModalFXML.fxml"));
 			modalRoot = loader.load();
 		} catch (IOException e) {
 			e.printStackTrace();
@@ -229,7 +224,7 @@ public class UserMainLayout implements Initializable {
 	private void handleEditAccountInfoLink() {
 		Parent modalRoot = null;
 		try {
-			FXMLLoader loader = new FXMLLoader(getClass().getResource("userEditModalFXML.fxml"));
+			FXMLLoader loader = new FXMLLoader(getClass().getResource("../view/userEditModalFXML.fxml"));
 			modalRoot = loader.load();
 		} catch (IOException e) {
 			e.printStackTrace();

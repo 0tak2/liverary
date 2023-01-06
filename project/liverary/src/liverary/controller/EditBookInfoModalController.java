@@ -1,4 +1,4 @@
-package liverary.view;
+package liverary.controller;
 
 import java.net.URL;
 import java.util.Optional;
@@ -18,14 +18,12 @@ import javafx.scene.control.Label;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
 import javafx.stage.Stage;
-import liverary.controller.DeleteBookController;
-import liverary.controller.GetABookByISBNController;
-import liverary.controller.GetLoanRecordsByISBNController;
-import liverary.controller.UpdateBookController;
+import liverary.service.BookService;
+import liverary.service.LoanService;
 import liverary.vo.BookVO;
 import liverary.vo.LoanVO;
 
-public class EditBookInfoModal implements Initializable {
+public class EditBookInfoModalController implements Initializable {
 	
 	@FXML private Label greetingLabel;
 	@FXML private Label additionalInfoLabel;
@@ -52,8 +50,8 @@ public class EditBookInfoModal implements Initializable {
 	}
 	
 	public void getDataAndSetTableView(String targetISBN) {
-		GetABookByISBNController controller = new GetABookByISBNController();
-		BookVO book = controller.exec(targetISBN);
+		BookService service = new BookService();
+		BookVO book = service.selectABookByISBN(targetISBN);
 		
 		String date = book.getBdate();
 		String year = date.split("년")[0];
@@ -98,8 +96,8 @@ public class EditBookInfoModal implements Initializable {
 		BookVO newBook = new BookVO(isbn, title, price, author, translator, publisher,
 				(year + "년 " + month + "월"), page, supplement);
 		
-		UpdateBookController controller = new UpdateBookController();
-		boolean success = controller.exec(newBook);
+		BookService service = new BookService();
+		boolean success = service.updateBook(newBook);
 		
 		if (success) {
 			(new Alert(
@@ -130,16 +128,16 @@ public class EditBookInfoModal implements Initializable {
 		    return;
 		}
 		
-		GetLoanRecordsByISBNController loanController = new GetLoanRecordsByISBNController();
-		ObservableList<LoanVO> list = loanController.exec(isbn);
+		LoanService loanService = new LoanService();
+		ObservableList<LoanVO> list = loanService.selectLoanRecordsByISBN(isbn);
 		if (!list.isEmpty()) {
 			(new Alert(
 					AlertType.ERROR, "해당 자료에 대한 대출/반납 이력이 존재하여 삭제할 수 없습니다.")).showAndWait();
 			return;
 		}
 		
-		DeleteBookController controller = new DeleteBookController();
-		boolean success = controller.exec(isbn);
+		BookService bookService = new BookService();
+		boolean success = bookService.deleteBook(isbn);
 		
 		if (success) {
 			(new Alert(

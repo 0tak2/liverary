@@ -1,58 +1,28 @@
-package liverary.view;
+package liverary.controller;
 
 import java.io.IOException;
 import java.net.URL;
-import java.time.LocalDate;
-import java.time.format.DateTimeFormatter;
-import java.util.Optional;
 import java.util.ResourceBundle;
 
-import javafx.application.Platform;
-import javafx.collections.FXCollections;
-import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 import javafx.scene.Node;
-import javafx.scene.Parent;
-import javafx.scene.Scene;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.Button;
-import javafx.scene.control.ButtonType;
-import javafx.scene.control.ComboBox;
-import javafx.scene.control.DatePicker;
 import javafx.scene.control.Hyperlink;
 import javafx.scene.control.Label;
 import javafx.scene.control.PasswordField;
-import javafx.scene.control.TableColumn;
-import javafx.scene.control.TableRow;
-import javafx.scene.control.TableView;
-import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
-import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.layout.VBox;
-import javafx.stage.Stage;
-import javafx.stage.StageStyle;
 import liverary.Globals;
-import liverary.controller.GetAccountByNoController;
-import liverary.controller.GetLoanBookRecordsByAnoController;
-import liverary.controller.GetLoanBookRecordsByISBNController;
-import liverary.controller.GetLoanBookRecordsByKeywordController;
-import liverary.controller.GetLoanRecordsByISBNController;
-import liverary.controller.GetLoanRecordsByKeywordController;
-import liverary.controller.IsThisReturnNeededPenalty;
-import liverary.controller.LendBookController;
-import liverary.controller.NewAccountController;
-import liverary.controller.NewBookController;
-import liverary.controller.ReturnBookController;
-import liverary.controller.VerifyNewUsernameController;
-import liverary.util.DateHelper;
+import liverary.service.AccountService;
+import liverary.view.LayoutsEnum;
+import liverary.view.StageManager;
 import liverary.vo.AccountVO;
-import liverary.vo.BookVO;
-import liverary.vo.LoanVO;
 
-public class RegisterStaffAccountLayout implements Initializable {
+public class RegisterStaffAccountLayoutController implements Initializable {
 
 	@FXML private VBox rootVBox;
 	
@@ -86,7 +56,7 @@ public class RegisterStaffAccountLayout implements Initializable {
 	public void initialize(URL url, ResourceBundle bundle) {
 		// 상단 메뉴 추가
 		try {
-			menuComponent = FXMLLoader.load(getClass().getResource("menuComponentFXML.fxml"));
+			menuComponent = FXMLLoader.load(getClass().getResource("../view/menuComponentFXML.fxml"));
 			rootVBox.getChildren().add(0, menuComponent);
 		} catch (IOException e1) {
 			e1.printStackTrace();
@@ -113,9 +83,16 @@ public class RegisterStaffAccountLayout implements Initializable {
 	@FXML
 	private void handleVerifyBtn() {
 		String username = usernameTextField.getText();
-		VerifyNewUsernameController controller = new VerifyNewUsernameController();
-		boolean success = controller.exec(username);
-		if (success) {
+		
+		AccountService service = new AccountService();
+		AccountVO account = service.selectAccountbyUsername(username);
+		
+		boolean available = false;
+		if (account == null) {
+			available = true;
+		}
+		
+		if (available) {
 			(new Alert(
 					AlertType.INFORMATION, username + "은(는) 아이디로 사용 가능합니다.")).showAndWait();
 			verified = true;
@@ -186,8 +163,8 @@ public class RegisterStaffAccountLayout implements Initializable {
 		AccountVO newAccount = new AccountVO(name, birth, enteredDate, phone,
 												email, addr, department, 0, level, username, password);
 		
-		NewAccountController controller = new NewAccountController();
-		boolean success = controller.exec(newAccount);
+		AccountService service = new AccountService();
+		boolean success = service.insertNewAccount(newAccount);
 		
 		if (success) {
 			(new Alert(

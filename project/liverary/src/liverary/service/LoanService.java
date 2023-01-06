@@ -27,7 +27,7 @@ public class LoanService {
 		}
 		
 		LoanDAO dao = new LoanDAO(con);
-		ObservableList<LoanVO> list = dao.selectByISBN(isbn);
+		ObservableList<LoanVO> list = dao.selectRecentByISBN(isbn);
 		
 		try {
 			con.close();
@@ -47,7 +47,7 @@ public class LoanService {
 		}
 		
 		LoanDAO dao = new LoanDAO(con);
-		ObservableList<LoanVO> list = dao.selectByKeyword(keyword);
+		ObservableList<LoanVO> list = dao.selectRecentByKeyword(keyword);
 		
 		try {
 			con.close();
@@ -142,7 +142,7 @@ public class LoanService {
 	public boolean getIsNeededPenalty(LoanVO record) {
 		boolean penalty = false;
 		LocalDate dueDate = LocalDate.parse(record.getLduedate(), DateTimeFormatter.ISO_DATE);
-		System.out.println(DateHelper.getDifferenceByToday(dueDate));
+
 		if (DateHelper.getDifferenceByToday(dueDate) > 0) {
 			penalty = true;
 		}
@@ -158,7 +158,7 @@ public class LoanService {
 		}
 		
 		LoanDAO dao = new LoanDAO(con);
-		ObservableList<LoanByAccountVO> list = dao.selectByAno(ano);
+		ObservableList<LoanByAccountVO> list = dao.selectWithAccountByAno(ano);
 		
 		try {
 			con.close();
@@ -205,7 +205,7 @@ public class LoanService {
 		}
 		
 		LoanDAO dao = new LoanDAO(con);
-		ObservableList<LoanVO> listBeforeProcessed = dao.selectBookByAno(ano);
+		ObservableList<LoanVO> listBeforeProcessed = dao.selectByAno(ano);
 		ObservableList<LoanVO> list = FXCollections.observableArrayList();
 		for (LoanVO row : listBeforeProcessed) {
 			if (row.getAvailable_kor().equals("반납완료")) {
@@ -238,7 +238,7 @@ public class LoanService {
 		}
 		
 		LoanDAO dao = new LoanDAO(con);
-		ObservableList<LoanVO> listBeforeProcessed = dao.selectBooksByKeyword(keyword, startDate, endDate);
+		ObservableList<LoanVO> listBeforeProcessed = dao.selectByKeywordAndDate(keyword, startDate, endDate);
 		ObservableList<LoanVO> list = FXCollections.observableArrayList();
 		for (LoanVO row : listBeforeProcessed) {
 			if (row.getAvailable_kor().equals("반납완료")) {
@@ -271,7 +271,7 @@ public class LoanService {
 		}
 		
 		LoanDAO dao = new LoanDAO(con);
-		ObservableList<LoanVO> listBeforeProcessed = dao.selectBooksByISBN(isbn, startDate, endDate);
+		ObservableList<LoanVO> listBeforeProcessed = dao.selectByISBNAndDate(isbn, startDate, endDate);
 		ObservableList<LoanVO> list = FXCollections.observableArrayList();
 		for (LoanVO row : listBeforeProcessed) {
 			if (row.getAvailable_kor().equals("반납완료")) {
@@ -306,7 +306,7 @@ public class LoanService {
 		}
 		
 		LoanDAO dao = new LoanDAO(con);
-		ObservableList<LoanVO> listOfAll = dao.selectBooksByKeyword(keyword, startDate, endDate);
+		ObservableList<LoanVO> listOfAll = dao.selectByKeywordAndDate(keyword, startDate, endDate);
 		ObservableList<LoanVO> list = FXCollections.observableArrayList();
 		for (LoanVO row : listOfAll) {
 			if (row.getAvailable_kor().equals("대출중")) {
@@ -334,7 +334,7 @@ public class LoanService {
 		}
 		
 		LoanDAO dao = new LoanDAO(con);
-		ObservableList<LoanVO> listOfAll = dao.selectBooksByISBN(keyword, startDate, endDate);
+		ObservableList<LoanVO> listOfAll = dao.selectByISBNAndDate(keyword, startDate, endDate);
 		ObservableList<LoanVO> list = FXCollections.observableArrayList();
 		for (LoanVO row : listOfAll) {
 			if (row.getAvailable_kor().equals("대출중")) {

@@ -1,4 +1,4 @@
-package liverary.view;
+package liverary.controller;
 
 import java.net.URL;
 import java.util.ResourceBundle;
@@ -10,10 +10,10 @@ import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.cell.PropertyValueFactory;
 import liverary.Globals;
-import liverary.controller.GetLoanBookRecordsByAnoController;
+import liverary.service.LoanService;
 import liverary.vo.LoanVO;
 
-public class UserHistoryModal implements Initializable {
+public class UserHistoryModalController implements Initializable {
 
 	@FXML private TableView<LoanVO> historyTableView;
 	
@@ -52,8 +52,8 @@ public class UserHistoryModal implements Initializable {
 		historyTableView.getColumns().addAll(
 				lentAtColumn, returnedDateColumn, isbnColumn, titleColumn, authorColumn, publisherColumn, statusColumn);
 		
-		GetLoanBookRecordsByAnoController controller = new GetLoanBookRecordsByAnoController();
-		ObservableList<LoanVO> list = controller.exec(Globals.getCurrentSessionNo());
+		LoanService service = new LoanService();
+		ObservableList<LoanVO> list = service.selectLoanBookRowsOfAccount(Globals.getCurrentSessionNo());
 		historyTableView.setItems(list);
 	}
 	

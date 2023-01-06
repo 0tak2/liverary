@@ -1,4 +1,4 @@
-package liverary.view;
+package liverary.controller;
 
 import java.net.URL;
 import java.util.Optional;
@@ -17,12 +17,10 @@ import javafx.scene.control.Label;
 import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextField;
 import javafx.stage.Stage;
-import liverary.controller.DeleteAccountController;
-import liverary.controller.GetAccountByNoController;
-import liverary.controller.UpdateAccountController;
+import liverary.service.AccountService;
 import liverary.vo.AccountVO;
 
-public class EditStaffAccountModal implements Initializable {
+public class EditStaffAccountModalController implements Initializable {
 	
 	@FXML private Label greetingLabel;
 	@FXML private Label additionalInfoLabel;
@@ -57,8 +55,8 @@ public class EditStaffAccountModal implements Initializable {
 	}
 	
 	public void getDataAndSetTableView(int ano) {
-		GetAccountByNoController controller = new GetAccountByNoController();
-		AccountVO account = controller.exec(ano);
+		AccountService service = new AccountService();
+		AccountVO account = service.selectAccountbyNO(ano);
 		
 		String[] birthStrArr = account.getAbirth().split("-");
 		String birthYear = birthStrArr[0];
@@ -145,8 +143,8 @@ public class EditStaffAccountModal implements Initializable {
 		AccountVO newAccount = new AccountVO(ano, name, department, birth, enteredDate, phone,
 												email, addr, point, level, username, password);
 		
-		UpdateAccountController controller = new UpdateAccountController();
-		boolean success = controller.exec(newAccount);
+		AccountService service = new AccountService();
+		boolean success = service.updateAccount(newAccount);
 		
 		if (success) {
 			(new Alert(
@@ -175,8 +173,8 @@ public class EditStaffAccountModal implements Initializable {
 		    return;
 		}
 		
-		DeleteAccountController controller = new DeleteAccountController();
-		int success = controller.exec(ano);
+		AccountService service = new AccountService();
+		int success = service.updateAccountToEmptyRow(ano);
 		
 		if (success == 1) {
 			(new Alert(

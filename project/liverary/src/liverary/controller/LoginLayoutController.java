@@ -1,12 +1,10 @@
-package liverary.view;
+package liverary.controller;
 
 import java.io.IOException;
 import java.net.URL;
 import java.util.ResourceBundle;
 
 import javafx.application.Platform;
-import javafx.collections.FXCollections;
-import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
@@ -14,16 +12,18 @@ import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Alert.AlertType;
-import javafx.stage.Stage;
-import javafx.stage.StageStyle;
 import javafx.scene.control.Button;
 import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextField;
+import javafx.stage.Stage;
+import javafx.stage.StageStyle;
 import liverary.Globals;
-import liverary.controller.GetAccountByUsernameController;
+import liverary.service.AccountService;
+import liverary.view.LayoutsEnum;
+import liverary.view.StageManager;
 import liverary.vo.AccountVO;
 
-public class LoginLayout implements Initializable {
+public class LoginLayoutController implements Initializable {
 	
 	@FXML private TextField usernameTextField;
 	@FXML private PasswordField passwordTextField;
@@ -44,8 +44,8 @@ public class LoginLayout implements Initializable {
 			return;
 		}
 		
-		GetAccountByUsernameController controller = new GetAccountByUsernameController();
-		AccountVO account = controller.exec(inputUsername);
+		AccountService service = new AccountService();
+		AccountVO account = service.selectAccountbyUsername(inputUsername);
 		
 		if (account == null) {
 			(new Alert(
@@ -86,7 +86,7 @@ public class LoginLayout implements Initializable {
 	private void handleRegisterBtn() {
 		Parent modalRoot = null;
 		try {
-			FXMLLoader loader = new FXMLLoader(getClass().getResource("userRegisterModalFXML.fxml"));
+			FXMLLoader loader = new FXMLLoader(getClass().getResource("../view/userRegisterModalFXML.fxml"));
 			modalRoot = loader.load();
 		} catch (IOException e) {
 			e.printStackTrace();

@@ -1,4 +1,4 @@
-package liverary.view;
+package liverary.controller;
 
 import java.net.URL;
 import java.util.ResourceBundle;
@@ -19,11 +19,10 @@ import javafx.scene.control.TextField;
 import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.stage.Stage;
-import liverary.controller.GetAccountsByNameController;
-import liverary.controller.GetAccountByUsernameController;
+import liverary.service.AccountService;
 import liverary.vo.AccountVO;
 
-public class SearchAccountsModal implements Initializable {
+public class SearchAccountsModalController implements Initializable {
 	@FXML private ComboBox<String> searchByComboBox;
 	@FXML private TextField searchQueryTextField;
 	@FXML private Button searchBtn;
@@ -33,7 +32,7 @@ public class SearchAccountsModal implements Initializable {
 	private String searchBy;
 	private AccountVO selectedAccount;
 	
-	public SearchAccountsModal() {
+	public SearchAccountsModalController() {
 	}
 	
 	@SuppressWarnings("unchecked")
@@ -91,8 +90,9 @@ public class SearchAccountsModal implements Initializable {
 	private void handleSearchBtn() {
 		String query = searchQueryTextField.getText();
 		if (searchBy.equals("아이디")) {
-			GetAccountByUsernameController controller = new GetAccountByUsernameController();
-			AccountVO account = controller.exec(query);
+			AccountService service = new AccountService();
+			AccountVO account = service.selectAccountbyUsername(query);
+			
 			ObservableList<AccountVO> list = null;
 			if (account != null) {
 				list = FXCollections.observableArrayList();
@@ -100,8 +100,8 @@ public class SearchAccountsModal implements Initializable {
 			}
 			searchTableView.setItems(list);
 		} else if (searchBy.equals("이름")) {
-			GetAccountsByNameController controller = new GetAccountsByNameController();
-			ObservableList<AccountVO> list = controller.exec(query);
+			AccountService service = new AccountService();
+			ObservableList<AccountVO> list = service.selectAccountsByName(query);
 			searchTableView.setItems(list);
 		}
 	}

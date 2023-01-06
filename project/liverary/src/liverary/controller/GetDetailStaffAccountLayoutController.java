@@ -1,4 +1,4 @@
-package liverary.view;
+package liverary.controller;
 
 import java.io.IOException;
 import java.net.URL;
@@ -28,11 +28,12 @@ import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
 import liverary.Globals;
-import liverary.controller.GetStaffAccountByUsernameController;
-import liverary.controller.GetStaffAccountsByNameController;
+import liverary.service.AccountService;
+import liverary.view.LayoutsEnum;
+import liverary.view.StageManager;
 import liverary.vo.AccountVO;
 
-public class GetDetailStaffAccountLayout implements Initializable {
+public class GetDetailStaffAccountLayoutController implements Initializable {
 
 	@FXML private VBox rootVBox;
 	
@@ -60,7 +61,7 @@ public class GetDetailStaffAccountLayout implements Initializable {
 		
 		// 상단 메뉴 추가
 		try {
-			menuComponent = FXMLLoader.load(getClass().getResource("menuComponentFXML.fxml"));
+			menuComponent = FXMLLoader.load(getClass().getResource("../view/menuComponentFXML.fxml"));
 			rootVBox.getChildren().add(0, menuComponent);
 		} catch (IOException e1) {
 			e1.printStackTrace();
@@ -135,8 +136,8 @@ public class GetDetailStaffAccountLayout implements Initializable {
 	}
 	
 	private void setDataToTableViewByName() {
-		GetStaffAccountsByNameController controller = new GetStaffAccountsByNameController();
-		ObservableList<AccountVO> list = controller.exec(searchKeywordTextField.getText());
+		AccountService service = new AccountService();
+		ObservableList<AccountVO> list = service.selectStaffAccountsByName(searchKeywordTextField.getText());
 		if (list.isEmpty()) {
 			(new Alert(
 					AlertType.WARNING, "조건에 맞는 계정을 찾을 수 없습니다.")).showAndWait();
@@ -148,10 +149,9 @@ public class GetDetailStaffAccountLayout implements Initializable {
 	}
 	
 	private void setDataToTableViewByUsername() {
-		GetStaffAccountByUsernameController controller = new GetStaffAccountByUsernameController();
-		AccountVO account = controller.exec(searchKeywordTextField.getText());
+		AccountService service = new AccountService();
+		AccountVO account = service.selectStaffAccountbyUsername(searchKeywordTextField.getText());
 
-		
 		if (account == null) {
 			(new Alert(
 					AlertType.WARNING, "조건에 맞는 계정을 찾을 수 없습니다.")).showAndWait();
@@ -183,8 +183,6 @@ public class GetDetailStaffAccountLayout implements Initializable {
 	
 	@FXML
 	private void handleSearchBtn() {
-		String query = searchKeywordTextField.getText();
-		
 		if (searchBy.equals("아이디")) {
 			setDataToTableViewByUsername();
 		} else if (searchBy.equals("이름")) {
@@ -206,9 +204,9 @@ public class GetDetailStaffAccountLayout implements Initializable {
 		}
 		
 		Parent modalRoot = null;
-		EditStaffAccountModal controller = null;
+		EditStaffAccountModalController controller = null;
 		try {
-			FXMLLoader loader = new FXMLLoader(getClass().getResource("editStaffAccountModalFXML.fxml"));
+			FXMLLoader loader = new FXMLLoader(getClass().getResource("../view/editStaffAccountModalFXML.fxml"));
 			modalRoot = loader.load();
 			controller = loader.getController();
 		} catch (IOException e) {
