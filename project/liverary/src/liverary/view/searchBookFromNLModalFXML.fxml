@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.TableView?>
+<?import javafx.scene.layout.FlowPane?>
+<?import javafx.scene.layout.VBox?>
+
+<VBox maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="474.0" prefWidth="428.0" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1" fx:controller="liverary.controller.SearchBookFromNLModalController">
+   <children>
+      <TableView fx:id="searchTableView" prefHeight="382.0" prefWidth="428.0" VBox.vgrow="ALWAYS" />
+      <FlowPane alignment="CENTER" prefHeight="60.0" prefWidth="465.0">
+         <children>
+            <Button fx:id="selectBtn" alignment="CENTER" contentDisplay="CENTER" mnemonicParsing="false" onAction="#handleSelectBtn" prefHeight="22.0" prefWidth="61.0" text="선택" />
+         </children>
+         <padding>
+            <Insets bottom="3.0" left="3.0" right="3.0" top="3.0" />
+         </padding>
+      </FlowPane>
+   </children>
+</VBox>

@@ -47,7 +47,7 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-<VBox fx:id="rootVBox" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="700.0" prefWidth="900.0" xmlns="http://javafx.com/javafx" xmlns:fx="http://javafx.com/fxml" fx:controller="liverary.controller.AddNewBookLayoutController">
+<VBox fx:id="rootVBox" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="700.0" prefWidth="900.0" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1" fx:controller="liverary.controller.AddNewBookLayoutController">
    <children>
       <HBox nodeOrientation="LEFT_TO_RIGHT" prefHeight="100.0" prefWidth="1200.0">
          <children>
@@ -120,7 +120,6 @@
             <Label text="출판사" GridPane.rowIndex="8" />
             <Label text="주저자" GridPane.rowIndex="5" />
             <TextField fx:id="isbnTextField" GridPane.columnIndex="1" />
-            <TextField fx:id="titleTextField" GridPane.columnIndex="1" GridPane.rowIndex="1" />
             <TextField fx:id="pageTextField" GridPane.columnIndex="1" GridPane.rowIndex="3" />
             <TextField fx:id="priceTextField" GridPane.columnIndex="1" GridPane.rowIndex="4" />
             <TextField fx:id="authorTextField" GridPane.columnIndex="1" GridPane.rowIndex="5" />
@@ -143,6 +142,16 @@
                </children>
             </HBox>
             <TextArea fx:id="supplementTextField" prefHeight="25.0" prefWidth="640.0" GridPane.columnIndex="1" GridPane.rowIndex="7" />
+            <HBox prefHeight="100.0" prefWidth="200.0" GridPane.columnIndex="1" GridPane.rowIndex="1">
+               <children>
+                  <TextField fx:id="titleTextField" onAction="#handleTitleTextFieldEntered" prefHeight="22.0" prefWidth="466.0" />
+                  <Button fx:id="searchBtn" mnemonicParsing="false" onAction="#handleSearchBtn" prefHeight="22.0" prefWidth="149.0" text="국립중앙도서관 검색">
+                     <HBox.margin>
+                        <Insets left="15.0" />
+                     </HBox.margin>
+                  </Button>
+               </children>
+            </HBox>
          </children>
          <VBox.margin>
             <Insets bottom="50.0" left="50.0" right="50.0" top="30.0" />

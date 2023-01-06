@@ -50,5 +50,11 @@
 	<classpathentry kind="lib" path="C:/Program Files/Java/jdk-11.0.17/apache-commons/commons-dbcp2-2.9.0.jar"/>
 	<classpathentry kind="lib" path="C:/Program Files/Java/jdk-11.0.17/apache-commons/commons-logging-1.2.jar"/>
 	<classpathentry kind="lib" path="C:/Program Files/Java/jdk-11.0.17/apache-commons/commons-pool2-2.11.1.jar"/>
+	<classpathentry kind="lib" path="lib/gson-2.10.jar"/>
+	<classpathentry kind="lib" path="lib/kotlin-stdlib-1.8.0.jar"/>
+	<classpathentry kind="lib" path="lib/okhttp-4.10.0.jar"/>
+	<classpathentry kind="lib" path="lib/okio-2.8.0.jar"/>
+	<classpathentry kind="lib" path="lib/retrofit-2.9.0.jar"/>
+	<classpathentry kind="lib" path="lib/converter-gson-2.9.0.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>

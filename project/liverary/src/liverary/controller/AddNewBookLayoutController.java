@@ -4,10 +4,13 @@ import java.io.IOException;
 import java.net.URL;
 import java.util.ResourceBundle;
 
+import javafx.application.Platform;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 import javafx.scene.Node;
+import javafx.scene.Parent;
+import javafx.scene.Scene;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.Button;
@@ -16,11 +19,14 @@ import javafx.scene.control.Label;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.VBox;
+import javafx.stage.Stage;
+import javafx.stage.StageStyle;
 import liverary.Globals;
 import liverary.service.BookService;
 import liverary.view.LayoutsEnum;
 import liverary.view.StageManager;
 import liverary.vo.BookVO;
+import liverary.vo.NlBook;
 
 public class AddNewBookLayoutController implements Initializable {
 
@@ -32,6 +38,7 @@ public class AddNewBookLayoutController implements Initializable {
 	
 	@FXML private TextField isbnTextField;
 	@FXML private TextField titleTextField;
+	@FXML private Button searchBtn;
 	@FXML private TextField yearTextField;
 	@FXML private TextField monthTextField;
 	@FXML private TextField pageTextField;
@@ -44,6 +51,8 @@ public class AddNewBookLayoutController implements Initializable {
 	@FXML private Button addBtn;
 	
 	private Node menuComponent; 
+	
+	private SearchBookFromNLModalController controller;
 	
 	@Override
 	public void initialize(URL arg0, ResourceBundle arg1) {
@@ -121,5 +130,38 @@ public class AddNewBookLayoutController implements Initializable {
 			(new Alert(
 					AlertType.ERROR, "자료 등록 중 문제가 발생했습니다. 오류가 지속되면 관리자에게 문의하십시오.")).showAndWait();
 		}
+	}
+	
+	@FXML
+	private void handleTitleTextFieldEntered() {
+		searchBtn.fire();
+	}
+	
+	@FXML
+	private void handleSearchBtn() {
+		Parent modalRoot = null;
+		controller = null;
+		try {
+			FXMLLoader loader = new FXMLLoader(getClass().getResource("../view/searchBookFromNLModalFXML.fxml"));
+			modalRoot = loader.load();
+			controller = loader.getController();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+		controller.setDataAndRender(titleTextField.getText());
+		
+		Stage dialog = new Stage(StageStyle.UTILITY);
+		dialog.setScene(new Scene(modalRoot));
+		Platform.runLater(() -> {
+			dialog.showAndWait();
+			if (controller.getSelectedBook() != null) {
+				NlBook selectedBook = controller.getSelectedBook();
+				isbnTextField.setText(selectedBook.getIsbn());
+				titleTextField.setText(selectedBook.getTitleInfo());
+				yearTextField.setText(selectedBook.getPubYearInfo());
+				authorTextField.setText(selectedBook.getAuthorInfo());
+				publisherTextField.setText(selectedBook.getPubInfo());
+			}
+		});
 	}
 }
