@@ -91,7 +91,7 @@ public class RegisterStaffAccountLayoutController implements Initializable {
 		String username = usernameTextField.getText();
 		
 		AccountService service = new AccountService();
-		AccountVO account = service.selectAccountbyUsername(username);
+		AccountVO account = service.selectAccountbyUsername(username, true);
 		
 		boolean available = false;
 		if (account == null) {

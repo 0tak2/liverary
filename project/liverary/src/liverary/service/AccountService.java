@@ -13,7 +13,7 @@ import liverary.vo.LoanVO;
 
 public class AccountService {
 
-	public AccountVO selectAccountbyUsername(String username) {
+	public AccountVO selectAccountbyUsername(String username, boolean includeDisabled) {
 		Connection con = null;
 		try {
 			con = DBCPConnectionPool.getDataSource().getConnection();
@@ -22,7 +22,12 @@ public class AccountService {
 		}
 		
 		AccountDAO dao = new AccountDAO(con);
-		AccountVO account = dao.selectByUsername(username);
+		AccountVO account = null;
+		if (includeDisabled) {
+			account = dao.selectByUsernameIncludeDisabled(username); 
+		} else {
+			account = dao.selectByUsername(username);			
+		}
 		
 		try {
 			con.close();
@@ -31,6 +36,10 @@ public class AccountService {
 		}
 		
 		return account;
+	}
+	
+	public AccountVO selectAccountbyUsername(String username) {
+		return selectAccountbyUsername(username, false);
 	}
 
 	public AccountVO selectByUsernameAndPassword(String username, String password) {

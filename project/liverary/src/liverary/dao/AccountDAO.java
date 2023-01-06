@@ -47,6 +47,32 @@ public class AccountDAO {
 		
 	}
 	
+	public AccountVO selectByUsernameIncludeDisabled(String username) {
+		String sql = "SELECT * FROM accountsTBL WHERE ausername = ?";
+		
+		AccountVO account = null;
+		PreparedStatement pstmt = null;
+		try {
+			pstmt = con.prepareStatement(sql);
+			pstmt.setString(1, username);
+			ResultSet rs = pstmt.executeQuery();
+			
+			if (!rs.isBeforeFirst() ) {    
+				return null;
+			} else {
+				rs.next();
+				account = new AccountVO(rs.getInt("ano"), rs.getString("aname"), rs.getString("adepartment"), rs.getString("abirth"), rs.getString("acreatedAt"), rs.getString("aphone"),
+						rs.getString("aemail"), rs.getString("aaddr"), rs.getInt("apoint"), rs.getInt("alevel"), rs.getString("ausername"), rs.getString("apassword"));
+			}
+			
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		
+		return account;
+		
+	}
+
 	public AccountVO selectByUsernameAndPassword(String username, String password) {
 		String sql = "SELECT * FROM accountsTBL WHERE ausername = ? AND apassword = ? AND adisabled = FALSE";
 		
