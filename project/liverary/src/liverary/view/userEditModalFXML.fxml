@@ -81,7 +81,11 @@
       </GridPane>
       <HBox alignment="CENTER" prefHeight="53.0" prefWidth="396.0">
          <children>
-            <Button fx:id="editBtn" mnemonicParsing="false" onAction="#handleEditBtn" prefHeight="22.0" prefWidth="106.0" text="회원정보 수정" />
+            <Button fx:id="editBtn" mnemonicParsing="false" onAction="#handleEditBtn" prefHeight="22.0" prefWidth="106.0" text="회원정보 수정">
+               <HBox.margin>
+                  <Insets right="15.0" />
+               </HBox.margin></Button>
+            <Button fx:id="withdrawBtn" mnemonicParsing="false" onAction="#handleWithdrawBtn" prefHeight="22.0" prefWidth="106.0" style="-fx-background-color: #E71D36;" text="회원 탈퇴" />
          </children>
       </HBox>
    </children>

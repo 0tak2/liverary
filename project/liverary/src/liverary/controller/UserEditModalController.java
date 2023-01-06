@@ -1,13 +1,17 @@
 package liverary.controller;
 
 import java.net.URL;
+import java.util.Optional;
 import java.util.ResourceBundle;
 
+import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
+import javafx.scene.Node;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.Button;
+import javafx.scene.control.ButtonType;
 import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextField;
 import javafx.stage.Stage;
@@ -31,6 +35,7 @@ public class UserEditModalController implements Initializable {
 	@FXML private PasswordField passwordConfirmTextField;
 	
 	@FXML private Button editBtn;
+	@FXML private Button withdrawBtn;
 	
 	@Override
 	public void initialize(URL url, ResourceBundle bundle) {
@@ -97,6 +102,45 @@ public class UserEditModalController implements Initializable {
 		}
 	}
 	
-	
+	@FXML
+	private void handleWithdrawBtn(ActionEvent e) {
+		Alert alert = 
+		        new Alert(AlertType.WARNING, 
+		            "정말로 탈퇴하시겠습니까? 이 작업은 돌이킬 수 없습니다.",
+		             ButtonType.OK, 
+		             ButtonType.CANCEL);
+		alert.setTitle("회원 탈퇴 경고");
+		Optional<ButtonType> result = alert.showAndWait();
+
+		if (result.get() == ButtonType.CANCEL) {
+		    return;
+		}
+		
+		AccountService service = new AccountService();
+		int success = service.updateAccountToEmptyRow(Globals.getCurrentSessionNo(),  Globals.getCurrentSessionUsername());
+		
+		if (success == 1) {
+			(new Alert(
+					AlertType.INFORMATION, "성공적으로 항목을 삭제했습니다.")).showAndWait();
+			
+			Node node = (Node) e.getSource();
+		    Stage thisStage = (Stage) node.getScene().getWindow();
+		    thisStage.close();
+
+	    	Globals.setCurrentSession(null);
+	    	StageManager manager = StageManager.getInstance();
+	    	try {
+				manager.switchToWithHide(LayoutsEnum.LoginLayout);
+			} catch (Exception e1) {
+				e1.printStackTrace();
+			}
+		} else if (success == 11) {
+			(new Alert(
+					AlertType.ERROR, "미납도서가 있어 삭제할 수 없습니다.")).showAndWait();
+		} else {
+			(new Alert(
+					AlertType.ERROR, "삭제 작업 중 문제가 발생했습니다. 오류가 지속되면 관리자에게 문의하십시오.")).showAndWait();
+		}
+	}
 
 }

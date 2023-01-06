@@ -6,7 +6,7 @@
 <?import javafx.scene.layout.FlowPane?>
 <?import javafx.scene.layout.VBox?>
 
-<VBox maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="474.0" prefWidth="428.0" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1" fx:controller="liverary.controller.SearchBookFromNLModalController">
+<VBox maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="474.0" prefWidth="428.0" xmlns="http://javafx.com/javafx" xmlns:fx="http://javafx.com/fxml" fx:controller="liverary.controller.SearchBookFromNLModalController">
    <children>
       <TableView fx:id="searchTableView" prefHeight="382.0" prefWidth="428.0" VBox.vgrow="ALWAYS" />
       <FlowPane alignment="CENTER" prefHeight="60.0" prefWidth="465.0">
