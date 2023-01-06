@@ -159,7 +159,7 @@ public class MainLayoutController implements Initializable {
 		}
 		if (bookSearchByType.equals("ISBN")) {
 			LoanService service = new LoanService();
-			ObservableList<LoanVO> list = service.selectLoanRecordsByISBN(query);
+			ObservableList<LoanVO> list = service.selectRecentLoanRecordsByISBN(query);
 			
 			bookSearchTableView.setItems(list);
 			if (list.isEmpty()) {
@@ -168,7 +168,7 @@ public class MainLayoutController implements Initializable {
 			}
 		} else if (bookSearchByType.equals("표제")) {
 			LoanService service = new LoanService();
-			ObservableList<LoanVO> list = service.selectLoanRecordsByKeyword(query);
+			ObservableList<LoanVO> list = service.selectRecentLoanRecordsByKeyword(query);
 			
 			bookSearchTableView.setItems(list);
 			if (list.isEmpty()) {
@@ -219,18 +219,25 @@ public class MainLayoutController implements Initializable {
 			return;
 		}
 		
-		if (selectedBook.isAvailable()) {
+		if (selectedBook.isAvailable()) {		
 			selectedBook.setAno(selectedAccount.getAno());
 			LoanService service = new LoanService();
-			Boolean sucess = service.insertLoanRecord(selectedBook);
+			int result = service.insertLoanRecord(selectedBook);
 			
-			if (sucess) {
+			if (result == 1) {
 				String msg = "대출 처리에 성공하였습니다.\n\n"
 						+ "대출 자료: " + selectedBook.getBtitle() + "(" + selectedBook.getBisbn() + ")\n\n"
 								+ "이용자: " + selectedAccount.getAname() + "(" + selectedAccount.getAbirth() + ")";
 				(new Alert(	AlertType.INFORMATION, msg)).showAndWait();
 				bookSearchTableView.setItems(FXCollections.<LoanVO>observableArrayList());
 				selectedBook = null;
+			} else if (result == 11) {
+				(new Alert(
+						AlertType.ERROR, "최대 대출 한도를 넘어 대출할 수 없습니다. 최대 대출한도: "
+								+ Globals.getMaxLoanBooksAmount())).showAndWait();
+			} else if (result == 12) {
+				(new Alert(
+						AlertType.ERROR, "현재 연체중인 도서가 있어 대출할 수 없습니다.")).showAndWait();
 			} else {
 				(new Alert(
 						AlertType.ERROR, "대출 처리에 실패하였습니다. 문제가 반복되면 관리자에게 문희하십시오.")).showAndWait();
@@ -266,7 +273,8 @@ public class MainLayoutController implements Initializable {
 					+ "대상 자료: " + selectedBook.getBtitle() + "(" + selectedBook.getBisbn() + ")\n\n"
 					+ "정상 반납기일: " + selectedBook.getLduedate() + "\n\n"
 					+ "이용자: " + returnAccount.getAname() + "(" + returnAccount.getAbirth() + ")\n\n"
-					+ "포인트 감소: " + returnAccount.getApoint() + "->" + (returnAccount.getApoint() - 100);
+					+ "포인트 감소: " + returnAccount.getApoint() + "->" + 
+											(returnAccount.getApoint() - Globals.getPointMinusAmount());
 			Optional<ButtonType> result = new Alert(AlertType.CONFIRMATION, msg).showAndWait();
 			if(!result.isPresent()) {
 				return;

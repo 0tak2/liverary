@@ -18,6 +18,7 @@ import javafx.scene.control.TextField;
 import javafx.scene.layout.VBox;
 import liverary.Globals;
 import liverary.service.AccountService;
+import liverary.util.DateHelper;
 import liverary.view.LayoutsEnum;
 import liverary.view.StageManager;
 import liverary.vo.AccountVO;
@@ -66,6 +67,11 @@ public class RegisterStaffAccountLayoutController implements Initializable {
 		greetingLabel.setText(Globals.getCurrentSessionName() + "(" + Globals.getCurrentSessionUsername() + ")님 반갑습니다.");
 		additionalInfoLabel.setText(Globals.getCurrentSessionDepartment() + " | 권한" + Globals.getCurrentSessionLevel());
 		
+		levelTextField.setText("1");
+		String[] todayStr = DateHelper.todayDateStr().split("-");
+		enterYearTextField.setText(todayStr[0]);
+		enterMonthsTextField.setText(todayStr[1]);
+		enterDayTextField.setText(todayStr[2]);
 	}
 	
 	@FXML

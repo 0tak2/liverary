@@ -6,8 +6,9 @@ public class Globals {
 	private static AccountVO currentSession;
 	private static int pointPlusAmount;
 	private static int pointMinusAmount;
-	private static int loanRestrictPoint;
 	private static int maxLoanBooksAmount;
+	private static String nlApiSecret;
+	private static int nlApiMaxItems;
 	
 	public Globals() {
 	}
@@ -28,20 +29,28 @@ public class Globals {
 		Globals.pointMinusAmount = pointMinusAmount;
 	}
 
-	public static int getLoanRestrictPoint() {
-		return loanRestrictPoint;
-	}
-
-	public static void setLoanRestrictPoint(int loanRestrictPoint) {
-		Globals.loanRestrictPoint = loanRestrictPoint;
-	}
-
 	public static int getMaxLoanBooksAmount() {
 		return maxLoanBooksAmount;
 	}
 
 	public static void setMaxLoanBooksAmount(int maxLoanBooksAmount) {
 		Globals.maxLoanBooksAmount = maxLoanBooksAmount;
+	}
+
+	public static String getNlApiSecret() {
+		return nlApiSecret;
+	}
+
+	public static void setNlApiSecret(String nlApiSecret) {
+		Globals.nlApiSecret = nlApiSecret;
+	}
+
+	public static int getNlApiMaxItems() {
+		return nlApiMaxItems;
+	}
+
+	public static void setNlApiMaxItems(int nlApiMaxItems) {
+		Globals.nlApiMaxItems = nlApiMaxItems;
 	}
 
 	@Deprecated

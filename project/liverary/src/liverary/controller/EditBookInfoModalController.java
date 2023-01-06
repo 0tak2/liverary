@@ -44,7 +44,6 @@ public class EditBookInfoModalController implements Initializable {
 	@FXML private Button editBtn;
 	@FXML private Button deleteBtn;
 	
-	@SuppressWarnings("unchecked")
 	@Override
 	public void initialize(URL url, ResourceBundle bundle) {
 	}
@@ -129,7 +128,7 @@ public class EditBookInfoModalController implements Initializable {
 		}
 		
 		LoanService loanService = new LoanService();
-		ObservableList<LoanVO> list = loanService.selectLoanRecordsByISBN(isbn);
+		ObservableList<LoanVO> list = loanService.selectRecentLoanRecordsByISBN(isbn);
 		if (!list.isEmpty()) {
 			(new Alert(
 					AlertType.ERROR, "해당 자료에 대한 대출/반납 이력이 존재하여 삭제할 수 없습니다.")).showAndWait();

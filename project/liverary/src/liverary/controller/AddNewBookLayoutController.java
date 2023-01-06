@@ -45,7 +45,6 @@ public class AddNewBookLayoutController implements Initializable {
 	
 	private Node menuComponent; 
 	
-	@SuppressWarnings("unchecked")
 	@Override
 	public void initialize(URL arg0, ResourceBundle arg1) {
 		// 상단 메뉴 추가

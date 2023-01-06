@@ -8,6 +8,7 @@ import java.util.HashMap;
 
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import liverary.Globals;
 import liverary.dao.AccountDAO;
 import liverary.dao.DBCPConnectionPool;
 import liverary.dao.LoanDAO;
@@ -18,47 +19,12 @@ import liverary.vo.LoanVO;
 
 public class LoanService {
 
-	public ObservableList<LoanVO> selectLoanRecordsByISBN(String isbn) {
-		Connection con = null;
-		try {
-			con = DBCPConnectionPool.getDataSource().getConnection();
-		} catch (SQLException e) {
-			e.printStackTrace();
-		}
-		
-		LoanDAO dao = new LoanDAO(con);
-		ObservableList<LoanVO> list = dao.selectRecentByISBN(isbn);
-		
-		try {
-			con.close();
-		} catch (SQLException e) {
-			e.printStackTrace();
-		}
-		
-		return list;
-	}
-
-	public ObservableList<LoanVO> selectLoanRecordsByKeyword(String keyword) {
-		Connection con = null;
-		try {
-			con = DBCPConnectionPool.getDataSource().getConnection();
-		} catch (SQLException e) {
-			e.printStackTrace();
-		}
-		
-		LoanDAO dao = new LoanDAO(con);
-		ObservableList<LoanVO> list = dao.selectRecentByKeyword(keyword);
-		
-		try {
-			con.close();
-		} catch (SQLException e) {
-			e.printStackTrace();
-		}
-		
-		return list;
-	}
-
-	public boolean insertLoanRecord(LoanVO row) {
+	/* 대출 이력을 기록한다.
+	 * @return 1: 대출처리 성공
+	 * @return 11: 최대 대출 가능 한도를 넘어 대출할 수 없음.
+	 * @return 12: 연체 도서가 있어 대출할 수 없습니다.
+	 **/
+	public int insertLoanRecord(LoanVO row) {
 		
 		Connection con = null;
 		try {
@@ -68,18 +34,37 @@ public class LoanService {
 			e.printStackTrace();
 		}
 		
-		boolean sucess = false;
-		
 		LoanDAO dao = new LoanDAO(con);
+		
+		// 대출 현황
+		ObservableList<LoanByAccountVO> list = selectLoanWithAccountInfoOfAccount(row.getAno());
+		int total = 0;
+		int penalty = 0;
+		if (list != null) {
+			for (LoanByAccountVO item : list) {
+				if (item.getLcreatedat() != null && item.getLreturnedAt() == null) {
+					total++;
+					LocalDate dueDate = LocalDate.parse(item.getLduedate(), DateTimeFormatter.ISO_DATE);
+					if (DateHelper.getDifferenceByToday(dueDate) > 0) {
+						penalty++;
+					}
+				}
+			}
+		}
+		
+		if (total >= Globals.getMaxLoanBooksAmount()) {
+			return 11; // 최대 대출 가능 한도를 넘어 대출 불가
+		} else if (penalty > 0) {
+			return 12; // 연체 도서가 있어 대출 불가
+		}
+		
 		int affectedRows = dao.insert(row);
 		
 		try {
 			if (affectedRows == 1) {
-				sucess = true;
 				con.commit();
 			} else {
 				con.rollback();
-				sucess = false;
 			}
 			
 			con.close();
@@ -87,7 +72,7 @@ public class LoanService {
 			e.printStackTrace();
 		}
 		
-		return sucess;
+		return affectedRows;
 	}
 
 	public Boolean updateLoanRecord(LoanVO row) {
@@ -114,12 +99,16 @@ public class LoanService {
 		
 		AccountDAO accountDao = new AccountDAO(con);
 		AccountVO account = accountDao.selectByNo(row.getAno());
-
+	
 		int updateAccountAffectedRows = 0;
 		if (!penalty) { // 정상 반납
-			updateAccountAffectedRows = accountDao.updatePoint(row.getAno(), account.getApoint() + 100);			
+			int plusPointAmount = Globals.getPointPlusAmount();
+			updateAccountAffectedRows = accountDao.updatePoint(row.getAno(), 
+															account.getApoint() + plusPointAmount);			
 		} else {
-			updateAccountAffectedRows = accountDao.updatePoint(row.getAno(), account.getApoint() - 100);
+			int miunsPointAmount = Globals.getPointMinusAmount();
+			updateAccountAffectedRows = accountDao.updatePoint(row.getAno(), 
+															account.getApoint() - miunsPointAmount);
 		}
 		
 		try {
@@ -139,17 +128,47 @@ public class LoanService {
 		return sucess;
 	}
 
-	public boolean getIsNeededPenalty(LoanVO record) {
-		boolean penalty = false;
-		LocalDate dueDate = LocalDate.parse(record.getLduedate(), DateTimeFormatter.ISO_DATE);
-
-		if (DateHelper.getDifferenceByToday(dueDate) > 0) {
-			penalty = true;
+	public ObservableList<LoanVO> selectRecentLoanRecordsByISBN(String isbn) {
+		Connection con = null;
+		try {
+			con = DBCPConnectionPool.getDataSource().getConnection();
+		} catch (SQLException e) {
+			e.printStackTrace();
 		}
-		return penalty;
+		
+		LoanDAO dao = new LoanDAO(con);
+		ObservableList<LoanVO> list = dao.selectRecentByISBN(isbn);
+		
+		try {
+			con.close();
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		
+		return list;
 	}
-	
-	public ObservableList<LoanByAccountVO> selectLoanRowOfAccount(int ano) {
+
+	public ObservableList<LoanVO> selectRecentLoanRecordsByKeyword(String keyword) {
+		Connection con = null;
+		try {
+			con = DBCPConnectionPool.getDataSource().getConnection();
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		
+		LoanDAO dao = new LoanDAO(con);
+		ObservableList<LoanVO> list = dao.selectRecentByKeyword(keyword);
+		
+		try {
+			con.close();
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		
+		return list;
+	}
+
+	public ObservableList<LoanByAccountVO> selectLoanWithAccountInfoOfAccount(int ano) {
 		Connection con = null;
 		try {
 			con = DBCPConnectionPool.getDataSource().getConnection();
@@ -170,7 +189,7 @@ public class LoanService {
 	}
 
 	public HashMap<String, Integer> selectLoanStatusOfAccount(int ano) {
-		ObservableList<LoanByAccountVO> list = selectLoanRowOfAccount(ano);
+		ObservableList<LoanByAccountVO> list = selectLoanWithAccountInfoOfAccount(ano);
 		
 		int total = 0;
 		int penalty = 0;
@@ -349,6 +368,16 @@ public class LoanService {
 		}
 		
 		return list;
+	}
+
+	public boolean getIsNeededPenalty(LoanVO record) {
+		boolean penalty = false;
+		LocalDate dueDate = LocalDate.parse(record.getLduedate(), DateTimeFormatter.ISO_DATE);
+	
+		if (DateHelper.getDifferenceByToday(dueDate) > 0) {
+			penalty = true;
+		}
+		return penalty;
 	}
 
 }

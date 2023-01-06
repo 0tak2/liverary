@@ -63,8 +63,12 @@ public class SearchAccountsModalController implements Initializable {
 		phoneColumn.setMinWidth(150);
 		phoneColumn.setCellValueFactory(new PropertyValueFactory<>("aphone"));
 		
+		TableColumn<AccountVO, String> pointColumn = new TableColumn<>("포인트");
+		pointColumn.setMinWidth(20);
+		pointColumn.setCellValueFactory(new PropertyValueFactory<>("apoint"));
+		
 		searchTableView.getColumns().addAll(
-				noColumn, useridColumn, nameColumn, birthColumn, phoneColumn);
+				noColumn, useridColumn, nameColumn, birthColumn, phoneColumn, pointColumn);
 		
 		searchTableView.setRowFactory(e -> {
 			TableRow<AccountVO> row = new TableRow<>();
@@ -118,6 +122,14 @@ public class SearchAccountsModalController implements Initializable {
 					AlertType.WARNING, "선택한 회원정보가 없습니다.")).showAndWait();
 			return;
 		}
+		
+		if (selectedAccount.getApoint() < 0) {
+			(new Alert(
+					AlertType.ERROR, "포인트가 0 미만입니다. 이 사용자는 대출할 수 없습니다.")).showAndWait();
+			selectedAccount = null;
+			return;
+		}
+		
 	    Node node = (Node) e.getSource();
 	    Stage thisStage = (Stage) node.getScene().getWindow();
 	    thisStage.close();

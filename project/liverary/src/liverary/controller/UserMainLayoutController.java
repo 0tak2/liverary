@@ -151,7 +151,7 @@ public class UserMainLayoutController implements Initializable {
 		}
 		if (bookSearchByType.equals("ISBN")) {
 			LoanService service = new LoanService();
-			ObservableList<LoanVO> list = service.selectLoanRecordsByISBN(query);
+			ObservableList<LoanVO> list = service.selectRecentLoanRecordsByISBN(query);
 			
 			bookSearchTableView.setItems(list);
 			if (list.isEmpty()) {
@@ -160,7 +160,7 @@ public class UserMainLayoutController implements Initializable {
 			}
 		} else if (bookSearchByType.equals("표제")) {
 			LoanService service = new LoanService();
-			ObservableList<LoanVO> list = service.selectLoanRecordsByKeyword(query);
+			ObservableList<LoanVO> list = service.selectRecentLoanRecordsByKeyword(query);
 
 			bookSearchTableView.setItems(list);
 			if (list.isEmpty()) {

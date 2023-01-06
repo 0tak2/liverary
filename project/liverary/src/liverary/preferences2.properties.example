@@ -1,0 +1,5 @@
+point.plusAmount=150
+point.minusAmount=150
+loanService.maxBookAmount=3
+nlApi.secret=YOURS_SECRET
+nlApi.maxItems=100

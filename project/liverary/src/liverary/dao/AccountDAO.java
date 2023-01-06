@@ -22,7 +22,7 @@ public class AccountDAO {
 	}
 
 	public AccountVO selectByUsername(String username) {
-		String sql = "SELECT * FROM accountsTBL WHERE ausername = ?";
+		String sql = "SELECT * FROM accountsTBL WHERE ausername = ? AND adisabled = FALSE";
 		
 		AccountVO account = null;
 		PreparedStatement pstmt = null;
@@ -47,8 +47,35 @@ public class AccountDAO {
 		
 	}
 	
+	public AccountVO selectByUsernameAndPassword(String username, String password) {
+		String sql = "SELECT * FROM accountsTBL WHERE ausername = ? AND apassword = ? AND adisabled = FALSE";
+		
+		AccountVO account = null;
+		PreparedStatement pstmt = null;
+		try {
+			pstmt = con.prepareStatement(sql);
+			pstmt.setString(1, username);
+			pstmt.setString(2, password);
+			ResultSet rs = pstmt.executeQuery();
+			
+			if (!rs.isBeforeFirst() ) {    
+				return null;
+			} else {
+				rs.next();
+				account = new AccountVO(rs.getInt("ano"), rs.getString("aname"), rs.getString("adepartment"), rs.getString("abirth"), rs.getString("acreatedAt"), rs.getString("aphone"),
+						rs.getString("aemail"), rs.getString("aaddr"), rs.getInt("apoint"), rs.getInt("alevel"), rs.getString("ausername"), rs.getString("apassword"));
+			}
+			
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		
+		return account;
+		
+	}
+	
 	public AccountVO selectByNo(int ano) {
-		String sql = "SELECT * FROM accountsTBL WHERE ano = ?";
+		String sql = "SELECT * FROM accountsTBL WHERE ano = ? AND adisabled = FALSE";
 		
 		AccountVO account = null;
 		PreparedStatement pstmt = null;
@@ -70,7 +97,7 @@ public class AccountDAO {
 	public int updatePoint(int ano, int newPoint) {
 		int affectedRows = 0;
 		try {
-			String sql = "UPDATE accountsTBL SET apoint = ? WHERE ano = ?";
+			String sql = "UPDATE accountsTBL SET apoint = ? WHERE ano = ? AND adisabled = FALSE";
 			PreparedStatement pstmt = con.prepareStatement(sql);
 			
 			pstmt.setInt(1, newPoint);
@@ -117,8 +144,9 @@ public class AccountDAO {
 		try {
 			String sql = "UPDATE `accountsTBL` "
 					+ "SET aname = ?, adepartment = ?, aphone = ?, aemail = ?, aaddr = ?, apassword = ?, "
-					+ "adepartment = ?, abirth = ?, acreatedAt = ?, apoint = ?, ausername = ? "
-					+ "WHERE ano = ?";
+					+ "adepartment = ?, abirth = ?, acreatedAt = ?, apoint = ?, ausername = ?, "
+					+ "adisabled = ?, adisabledAt = ? "
+					+ "WHERE ano = ? AND adisabled = FALSE";
 
 			PreparedStatement pstmt = con.prepareStatement(sql);
 			pstmt.setString(1, account.getAname());
@@ -132,8 +160,10 @@ public class AccountDAO {
 			pstmt.setString(9, account.getAcreatedAt());
 			pstmt.setInt(10, account.getApoint());
 			pstmt.setString(11, account.getAusername());
-			pstmt.setInt(12, account.getAno());
-
+			pstmt.setBoolean(12, account.isAdisabled());
+			pstmt.setString(13, account.getAdisabledAt());
+			pstmt.setInt(14, account.getAno());
+			
 			affectedRows = pstmt.executeUpdate();
 		} catch (SQLException e) {
 			e.printStackTrace();
@@ -143,7 +173,7 @@ public class AccountDAO {
 	}
 
 	public ObservableList<AccountVO> selectByName(String name) {
-		String sql = "SELECT * FROM accountsTBL WHERE aname LIKE ?";
+		String sql = "SELECT * FROM accountsTBL WHERE aname LIKE ? AND adisabled = FALSE";
 		
 		ObservableList<AccountVO> list = null;
 		PreparedStatement pstmt = null;
@@ -167,7 +197,7 @@ public class AccountDAO {
 	}
 
 	public AccountVO selectStaffByUsername(String username) {
-		String sql = "SELECT * FROM accountsTBL WHERE ausername = ? AND alevel > 0";
+		String sql = "SELECT * FROM accountsTBL WHERE ausername = ? AND alevel > 0 AND adisabled = FALSE";
 		
 		AccountVO account = null;
 		PreparedStatement pstmt = null;
@@ -192,7 +222,7 @@ public class AccountDAO {
 	}
 	
 	public ObservableList<AccountVO> selectStaffByName(String name) {
-		String sql = "SELECT * FROM accountsTBL WHERE aname LIKE ? AND alevel > 0";
+		String sql = "SELECT * FROM accountsTBL WHERE aname LIKE ? AND alevel > 0 AND adisabled = FALSE";
 		
 		ObservableList<AccountVO> list = null;
 		PreparedStatement pstmt = null;

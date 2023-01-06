@@ -17,7 +17,10 @@ import javafx.scene.control.Label;
 import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextField;
 import javafx.stage.Stage;
+import liverary.Globals;
 import liverary.service.AccountService;
+import liverary.view.LayoutsEnum;
+import liverary.view.StageManager;
 import liverary.vo.AccountVO;
 
 public class EditStaffAccountModalController implements Initializable {
@@ -153,6 +156,18 @@ public class EditStaffAccountModalController implements Initializable {
 			Node node = (Node) e.getSource();
 		    Stage thisStage = (Stage) node.getScene().getWindow();
 		    thisStage.close();
+		    
+		    if(ano == Globals.getCurrentSessionNo()) {
+				(new Alert(
+						AlertType.INFORMATION, "현재 로그인된 계정의 정보를 수정하여 로그아웃됩니다.")).showAndWait();
+		    	Globals.setCurrentSession(null);
+		    	StageManager manager = StageManager.getInstance();
+		    	try {
+					manager.switchToWithHide(LayoutsEnum.LoginLayout);
+				} catch (Exception e1) {
+					e1.printStackTrace();
+				}
+		    }
 		} else {
 			(new Alert(
 					AlertType.ERROR, "계정 정보 수정 중 문제가 발생했습니다. 오류가 지속되면 관리자에게 문의하십시오.")).showAndWait();
@@ -174,7 +189,7 @@ public class EditStaffAccountModalController implements Initializable {
 		}
 		
 		AccountService service = new AccountService();
-		int success = service.updateAccountToEmptyRow(ano);
+		int success = service.updateAccountToEmptyRow(ano, username);
 		
 		if (success == 1) {
 			(new Alert(
@@ -183,15 +198,24 @@ public class EditStaffAccountModalController implements Initializable {
 			Node node = (Node) e.getSource();
 		    Stage thisStage = (Stage) node.getScene().getWindow();
 		    thisStage.close();
-		} else if (success == -1) {
-			(new Alert(
-					AlertType.ERROR, "삭제 작업 중 문제가 발생했습니다. 오류가 지속되면 관리자에게 문의하십시오.")).showAndWait();
-		} else if (success == -2) {
+		    
+		    if(ano == Globals.getCurrentSessionNo()) {
+				(new Alert(
+						AlertType.INFORMATION, "현재 로그인된 계정의 정보를 수정하여 로그아웃됩니다.")).showAndWait();
+		    	Globals.setCurrentSession(null);
+		    	StageManager manager = StageManager.getInstance();
+		    	try {
+					manager.switchToWithHide(LayoutsEnum.LoginLayout);
+				} catch (Exception e1) {
+					e1.printStackTrace();
+				}
+		    }
+		} else if (success == 11) {
 			(new Alert(
 					AlertType.ERROR, "미납도서가 있어 삭제할 수 없습니다.")).showAndWait();
 		} else {
 			(new Alert(
-					AlertType.ERROR, "알 수 없는 오류가 발생했습니다.")).showAndWait();
+					AlertType.ERROR, "삭제 작업 중 문제가 발생했습니다. 오류가 지속되면 관리자에게 문의하십시오.")).showAndWait();
 		}
 	}
 }

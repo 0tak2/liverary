@@ -13,6 +13,8 @@ public class AccountVO {
 	private int alevel;
 	private String ausername;
 	private String apassword;
+	private boolean adisabled;
+	private String adisabledAt;
 	
 	public AccountVO() {
 	}
@@ -24,6 +26,8 @@ public class AccountVO {
 		this.abirth = abirth;
 		this.aphone = aphone;
 		this.ausername = ausername;
+		this.adisabled = false;
+		this.adisabledAt = null;
 	}
 
 	public AccountVO(int ano, String aname, String adepartment, String abirth, String acreatedAt, String aphone,
@@ -41,6 +45,8 @@ public class AccountVO {
 		this.alevel = alevel;
 		this.ausername = ausername;
 		this.apassword = apassword;
+		this.adisabled = false;
+		this.adisabledAt = null;
 	}
 	
 	// 이용자 인서트용
@@ -57,6 +63,8 @@ public class AccountVO {
 		this.alevel = alevel;
 		this.ausername = ausername;
 		this.apassword = apassword;
+		this.adisabled = false;
+		this.adisabledAt = null;
 	}
 	
 	// 직원 인서트용
@@ -74,6 +82,8 @@ public class AccountVO {
 		this.alevel = alevel;
 		this.ausername = ausername;
 		this.apassword = apassword;
+		this.adisabled = false;
+		this.adisabledAt = null;
 	}
 	
 	public AccountVO(int ano, String aname, String abirth, String acreatedAt, String aphone,
@@ -89,6 +99,8 @@ public class AccountVO {
 		this.alevel = alevel;
 		this.ausername = ausername;
 		this.apassword = apassword;
+		this.adisabled = false;
+		this.adisabledAt = null;
 	}
 	
 	// 계정 정보 업데이트용
@@ -101,6 +113,8 @@ public class AccountVO {
 		this.aemail = aemail;
 		this.aaddr = aaddr;
 		this.apassword = apassword;
+		this.adisabled = false;
+		this.adisabledAt = null;
 	}
 
 	public int getAno() {
@@ -197,5 +211,21 @@ public class AccountVO {
 
 	public void setApassword(String apassword) {
 		this.apassword = apassword;
+	}
+
+	public boolean isAdisabled() {
+		return adisabled;
+	}
+
+	public void setAdisabled(boolean adisabled) {
+		this.adisabled = adisabled;
+	}
+
+	public String getAdisabledAt() {
+		return adisabledAt;
+	}
+
+	public void setAdisabledAt(String adisabledAt) {
+		this.adisabledAt = adisabledAt;
 	}
 }

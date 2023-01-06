@@ -45,7 +45,7 @@ public class LoginLayoutController implements Initializable {
 		}
 		
 		AccountService service = new AccountService();
-		AccountVO account = service.selectAccountbyUsername(inputUsername);
+		AccountVO account = service.selectByUsernameAndPassword(inputUsername, inputPassword);
 		
 		if (account == null) {
 			(new Alert(
@@ -53,7 +53,7 @@ public class LoginLayoutController implements Initializable {
 			return;
 		}
 		
-		if (inputPassword.equals(account.getApassword())) {
+		if (inputUsername.equals(account.getAusername()) && inputPassword.equals(account.getApassword())) {
 			Globals.setCurrentSession(account);
 			StageManager manager = StageManager.getInstance();
 			passwordTextField.clear();

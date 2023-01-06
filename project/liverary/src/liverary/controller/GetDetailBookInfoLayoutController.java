@@ -166,8 +166,6 @@ public class GetDetailBookInfoLayoutController implements Initializable {
 	
 	@FXML
 	private void handleSearchBtn() {
-		String query = bookSearchKeywordTextField.getText();
-		
 		if (bookSearchByType.equals("ISBN")) {
 			setDataToTableViewByISBN();
 		} else if (bookSearchByType.equals("표제")) {
