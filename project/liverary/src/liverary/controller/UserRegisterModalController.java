@@ -43,7 +43,7 @@ public class UserRegisterModalController implements Initializable {
 		String username = usernameTextField.getText();
 		
 		AccountService service = new AccountService();
-		AccountVO account = service.selectAccountbyUsername(username, true);
+		AccountVO account = service.selectAccountbyUsername(username, true, false);
 		
 		boolean available = false;
 		if (account == null) {

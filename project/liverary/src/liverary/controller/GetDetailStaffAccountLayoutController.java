@@ -137,7 +137,7 @@ public class GetDetailStaffAccountLayoutController implements Initializable {
 	
 	private void setDataToTableViewByName() {
 		AccountService service = new AccountService();
-		ObservableList<AccountVO> list = service.selectStaffAccountsByName(searchKeywordTextField.getText());
+		ObservableList<AccountVO> list = service.selectAccountsByName(searchKeywordTextField.getText(), true);
 		if (list.isEmpty()) {
 			(new Alert(
 					AlertType.WARNING, "조건에 맞는 계정을 찾을 수 없습니다.")).showAndWait();
@@ -150,7 +150,7 @@ public class GetDetailStaffAccountLayoutController implements Initializable {
 	
 	private void setDataToTableViewByUsername() {
 		AccountService service = new AccountService();
-		AccountVO account = service.selectStaffAccountbyUsername(searchKeywordTextField.getText());
+		AccountVO account = service.selectAccountbyUsername(searchKeywordTextField.getText(), false, true);
 
 		if (account == null) {
 			(new Alert(

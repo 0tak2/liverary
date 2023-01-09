@@ -2,7 +2,7 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org/DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
 
 <mapper namespace="liverary.account">
-	<select id="selectOne"
+	<select id="select"
 		parameterType="Account" resultType="Account">
 			SELECT * FROM accountsTBL 
 			<if test='ano != 0' >
@@ -11,6 +11,9 @@
 			<if test='ausername != null' >
 				WHERE ausername = #{ausername} 
 			</if>
+			<if test='aname != null' >
+				WHERE aname = #{aname} 
+			</if>
 			<if test='alevel >= 1' >
 				<![CDATA[
 					AND alevel >= 1
@@ -18,7 +21,7 @@
 			</if>
 			AND adisabled = FALSE
 	</select>
-	<select id="selectOneIncldeDisabled"
+	<select id="selectIncldeDisabled"
 		parameterType="Account" resultType="Account">
 			SELECT * FROM accountsTBL 
 			<if test='ausername != null' >

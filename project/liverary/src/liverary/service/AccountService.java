@@ -1,19 +1,15 @@
 package liverary.service;
 
 import java.sql.Connection;
-import java.sql.Date;
 import java.sql.SQLException;
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
-import java.util.HashMap;
+import java.util.List;
 
 import org.apache.ibatis.session.SqlSessionFactory;
 
-import com.mysql.cj.Session;
-
+import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
-import liverary.dao.AccountDAOOld;
 import liverary.dao.AccountDAO;
+import liverary.dao.AccountDAOOld;
 import liverary.dao.DBCPConnectionPool;
 import liverary.dao.LoanDAO;
 import liverary.mybatis.MyBatisConnectionFactory;
@@ -23,7 +19,7 @@ import liverary.vo.LoanVO;
 
 public class AccountService {
 
-	public AccountVO selectAccountbyUsername(String username, boolean includeDisabled) {
+	public AccountVO selectAccountbyUsername(String username, boolean includeDisabled, boolean isStaff) {
 		AccountVO account = null;
 		
 		SqlSessionFactory factory = MyBatisConnectionFactory.getSqlSessionFactory();
@@ -31,9 +27,12 @@ public class AccountService {
 		
 		AccountVO targetAccount = new AccountVO();
 		targetAccount.setAusername(username);
+		if (isStaff) {
+			targetAccount.setAlevel(1);
+		}
 		
 		if (includeDisabled) {
-			account = dao.selectOneIncludedDisabled(targetAccount);			
+			account = dao.selectOneIncludeDisabled(targetAccount);			
 		} else {
 			account = dao.selectOne(targetAccount);	
 		}
@@ -42,9 +41,9 @@ public class AccountService {
 	}
 	
 	public AccountVO selectAccountbyUsername(String username) {
-		return selectAccountbyUsername(username, false);
+		return selectAccountbyUsername(username, false, false);
 	}
-	
+
 	public AccountVO selectByUsernameAndPassword(String username, String password) {
 		AccountVO account = null;
 		
@@ -55,7 +54,7 @@ public class AccountService {
 		targetAccount.setAusername(username);
 		targetAccount.setApassword(password);
 
-		account = dao.selectOneIncludedDisabled(targetAccount);
+		account = dao.selectOneIncludeDisabled(targetAccount);
 		
 		return account;
 	}
@@ -74,40 +73,31 @@ public class AccountService {
 		return account;
 	}
 
-	public AccountVO selectStaffAccountbyUsername(String username) {
-		AccountVO account = null;
+	public ObservableList<AccountVO> selectAccountsByName(String name, boolean isStaff) {
+		List<AccountVO> list = null;
 		
 		SqlSessionFactory factory = MyBatisConnectionFactory.getSqlSessionFactory();
 		AccountDAO dao = new AccountDAO(factory);
 		
 		AccountVO targetAccount = new AccountVO();
-		targetAccount.setAusername(username);
-		targetAccount.setAlevel(1);
+		targetAccount.setAname(name);
 		
-		account = dao.selectOne(targetAccount);
+		if (isStaff) {
+			targetAccount.setAlevel(1);			
+		}
 		
-		return account;
+		list = dao.selectList(targetAccount);
+		
+		ObservableList<AccountVO> obList = FXCollections.observableArrayList();
+		for (AccountVO account : list) {
+			obList.add(account);
+		}
+		
+		return obList;
 	}
 
-	public ObservableList<AccountVO> selectStaffAccountsByName(String name) {
-		Connection con = null;
-		try {
-			con = DBCPConnectionPool.getDataSource().getConnection();
-			// con.setAutoCommit(false);
-		} catch (SQLException e) {
-			e.printStackTrace();
-		}
-		
-		AccountDAOOld dao = new AccountDAOOld(con);
-		ObservableList<AccountVO> list = dao.selectStaffByName(name);
-		
-		try {
-			con.close();
-		} catch (SQLException e) {
-			e.printStackTrace();
-		}
-		
-		return list;
+	public ObservableList<AccountVO> selectAccountsByName(String name) {
+		return selectAccountsByName(name, false);
 	}
 
 	public boolean insertNewAccount(AccountVO newAccount) {
@@ -137,27 +127,6 @@ public class AccountService {
 		}
 		
 		return result;
-	}
-
-	public ObservableList<AccountVO> selectAccountsByName(String name) {
-		Connection con = null;
-		try {
-			con = DBCPConnectionPool.getDataSource().getConnection();
-			// con.setAutoCommit(false);
-		} catch (SQLException e) {
-			e.printStackTrace();
-		}
-		
-		AccountDAOOld dao = new AccountDAOOld(con);
-		ObservableList<AccountVO> list = dao.selectByName(name);
-		
-		try {
-			con.close();
-		} catch (SQLException e) {
-			e.printStackTrace();
-		}
-		
-		return list;
 	}
 
 	public boolean updateAccount(AccountVO account) {
