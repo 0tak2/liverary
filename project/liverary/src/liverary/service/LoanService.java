@@ -9,7 +9,7 @@ import java.util.HashMap;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import liverary.Globals;
-import liverary.dao.AccountDAO;
+import liverary.dao.AccountDAOOld;
 import liverary.dao.DBCPConnectionPool;
 import liverary.dao.LoanDAO;
 import liverary.util.DateHelper;
@@ -97,7 +97,7 @@ public class LoanService {
 		LoanDAO loanDao = new LoanDAO(con);
 		int updateLoanAffectedRows = loanDao.update(row);
 		
-		AccountDAO accountDao = new AccountDAO(con);
+		AccountDAOOld accountDao = new AccountDAOOld(con);
 		AccountVO account = accountDao.selectByNo(row.getAno());
 	
 		int updateAccountAffectedRows = 0;

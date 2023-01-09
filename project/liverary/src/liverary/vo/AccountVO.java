@@ -1,11 +1,13 @@
 package liverary.vo;
 
+import java.util.Date;
+
 public class AccountVO {
 	private int ano;
 	private String aname;
 	private String adepartment;
-	private String abirth;
-	private String acreatedAt;
+	private Date abirth;
+	private Date acreatedAt;
 	private String aphone;
 	private String aemail;
 	private String aaddr;
@@ -14,12 +16,12 @@ public class AccountVO {
 	private String ausername;
 	private String apassword;
 	private boolean adisabled;
-	private String adisabledAt;
+	private Date adisabledAt;
 	
 	public AccountVO() {
 	}
 	
-	public AccountVO(int ano, String aname, String abirth, String aphone, String ausername) {
+	public AccountVO(int ano, String aname, Date abirth, String aphone, String ausername) {
 		super();
 		this.ano = ano;
 		this.aname = aname;
@@ -30,7 +32,7 @@ public class AccountVO {
 		this.adisabledAt = null;
 	}
 
-	public AccountVO(int ano, String aname, String adepartment, String abirth, String acreatedAt, String aphone,
+	public AccountVO(int ano, String aname, String adepartment, Date abirth, Date acreatedAt, String aphone,
 			String aemail, String aaddr, int apoint, int alevel, String ausername, String apassword) {
 		super();
 		this.ano = ano;
@@ -50,7 +52,7 @@ public class AccountVO {
 	}
 	
 	// 이용자 인서트용
-	public AccountVO(String aname, String abirth, String acreatedAt, String aphone,
+	public AccountVO(String aname, Date abirth, Date acreatedAt, String aphone,
 			String aemail, String aaddr, int apoint, int alevel, String ausername, String apassword) {
 		super();
 		this.aname = aname;
@@ -68,7 +70,7 @@ public class AccountVO {
 	}
 	
 	// 직원 인서트용
-	public AccountVO(String aname, String abirth, String acreatedAt, String aphone,
+	public AccountVO(String aname, Date abirth, Date acreatedAt, String aphone,
 			String aemail, String aaddr, String adepartment, int apoint, int alevel, String ausername, String apassword) {
 		super();
 		this.aname = aname;
@@ -86,7 +88,7 @@ public class AccountVO {
 		this.adisabledAt = null;
 	}
 	
-	public AccountVO(int ano, String aname, String abirth, String acreatedAt, String aphone,
+	public AccountVO(int ano, String aname, Date abirth, Date acreatedAt, String aphone,
 			String aemail, String aaddr, int apoint, int alevel, String ausername, String apassword) {
 		super();
 		this.aname = aname;
@@ -141,19 +143,19 @@ public class AccountVO {
 		this.adepartment = adepartment;
 	}
 
-	public String getAbirth() {
+	public Date getAbirth() {
 		return abirth;
 	}
 
-	public void setAbirth(String abirth) {
+	public void setAbirth(Date abirth) {
 		this.abirth = abirth;
 	}
 
-	public String getAcreatedAt() {
+	public Date getAcreatedAt() {
 		return acreatedAt;
 	}
 
-	public void setAcreatedAt(String acreatedAt) {
+	public void setAcreatedAt(Date acreatedAt) {
 		this.acreatedAt = acreatedAt;
 	}
 
@@ -221,11 +223,11 @@ public class AccountVO {
 		this.adisabled = adisabled;
 	}
 
-	public String getAdisabledAt() {
+	public Date getAdisabledAt() {
 		return adisabledAt;
 	}
 
-	public void setAdisabledAt(String adisabledAt) {
+	public void setAdisabledAt(Date adisabledAt) {
 		this.adisabledAt = adisabledAt;
 	}
 }

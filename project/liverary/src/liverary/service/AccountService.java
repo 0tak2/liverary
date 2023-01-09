@@ -1,12 +1,22 @@
 package liverary.service;
 
 import java.sql.Connection;
+import java.sql.Date;
 import java.sql.SQLException;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.util.HashMap;
+
+import org.apache.ibatis.session.SqlSessionFactory;
+
+import com.mysql.cj.Session;
 
 import javafx.collections.ObservableList;
+import liverary.dao.AccountDAOOld;
 import liverary.dao.AccountDAO;
 import liverary.dao.DBCPConnectionPool;
 import liverary.dao.LoanDAO;
+import liverary.mybatis.MyBatisConnectionFactory;
 import liverary.util.DateHelper;
 import liverary.vo.AccountVO;
 import liverary.vo.LoanVO;
@@ -14,25 +24,18 @@ import liverary.vo.LoanVO;
 public class AccountService {
 
 	public AccountVO selectAccountbyUsername(String username, boolean includeDisabled) {
-		Connection con = null;
-		try {
-			con = DBCPConnectionPool.getDataSource().getConnection();
-		} catch (SQLException e) {
-			e.printStackTrace();
-		}
-		
-		AccountDAO dao = new AccountDAO(con);
 		AccountVO account = null;
-		if (includeDisabled) {
-			account = dao.selectByUsernameIncludeDisabled(username); 
-		} else {
-			account = dao.selectByUsername(username);			
-		}
 		
-		try {
-			con.close();
-		} catch (SQLException e) {
-			e.printStackTrace();
+		SqlSessionFactory factory = MyBatisConnectionFactory.getSqlSessionFactory();
+		AccountDAO dao = new AccountDAO(factory);
+		
+		AccountVO targetAccount = new AccountVO();
+		targetAccount.setAusername(username);
+		
+		if (includeDisabled) {
+			account = dao.selectOneIncludedDisabled(targetAccount);			
+		} else {
+			account = dao.selectOne(targetAccount);	
 		}
 		
 		return account;
@@ -41,28 +44,52 @@ public class AccountService {
 	public AccountVO selectAccountbyUsername(String username) {
 		return selectAccountbyUsername(username, false);
 	}
-
+	
 	public AccountVO selectByUsernameAndPassword(String username, String password) {
-		Connection con = null;
-		try {
-			con = DBCPConnectionPool.getDataSource().getConnection();
-		} catch (SQLException e) {
-			e.printStackTrace();
-		}
+		AccountVO account = null;
 		
-		AccountDAO dao = new AccountDAO(con);
-		AccountVO account = dao.selectByUsernameAndPassword(username, password);
+		SqlSessionFactory factory = MyBatisConnectionFactory.getSqlSessionFactory();
+		AccountDAO dao = new AccountDAO(factory);
 		
-		try {
-			con.close();
-		} catch (SQLException e) {
-			e.printStackTrace();
-		}
+		AccountVO targetAccount = new AccountVO();
+		targetAccount.setAusername(username);
+		targetAccount.setApassword(password);
+
+		account = dao.selectOneIncludedDisabled(targetAccount);
 		
 		return account;
 	}
 
 	public AccountVO selectAccountbyNO(int no) {
+		AccountVO account = null;
+		
+		SqlSessionFactory factory = MyBatisConnectionFactory.getSqlSessionFactory();
+		AccountDAO dao = new AccountDAO(factory);
+		
+		AccountVO targetAccount = new AccountVO();
+		targetAccount.setAno(no);
+
+		account = dao.selectOne(targetAccount);
+		
+		return account;
+	}
+
+	public AccountVO selectStaffAccountbyUsername(String username) {
+		AccountVO account = null;
+		
+		SqlSessionFactory factory = MyBatisConnectionFactory.getSqlSessionFactory();
+		AccountDAO dao = new AccountDAO(factory);
+		
+		AccountVO targetAccount = new AccountVO();
+		targetAccount.setAusername(username);
+		targetAccount.setAlevel(1);
+		
+		account = dao.selectOne(targetAccount);
+		
+		return account;
+	}
+
+	public ObservableList<AccountVO> selectStaffAccountsByName(String name) {
 		Connection con = null;
 		try {
 			con = DBCPConnectionPool.getDataSource().getConnection();
@@ -71,8 +98,8 @@ public class AccountService {
 			e.printStackTrace();
 		}
 		
-		AccountDAO dao = new AccountDAO(con);
-		AccountVO account = dao.selectByNo(no);
+		AccountDAOOld dao = new AccountDAOOld(con);
+		ObservableList<AccountVO> list = dao.selectStaffByName(name);
 		
 		try {
 			con.close();
@@ -80,7 +107,7 @@ public class AccountService {
 			e.printStackTrace();
 		}
 		
-		return account;
+		return list;
 	}
 
 	public boolean insertNewAccount(AccountVO newAccount) {
@@ -93,37 +120,8 @@ public class AccountService {
 			e.printStackTrace();
 		}
 		
-		AccountDAO dao = new AccountDAO(con);
+		AccountDAOOld dao = new AccountDAOOld(con);
 		int affectedRows = dao.insert(newAccount);
-		
-		try {
-			if (affectedRows == 1) {
-				result = true;
-				con.commit();
-			} else {
-				result = false;
-				con.rollback();
-			}
-			con.close();
-		} catch (SQLException e) {
-			e.printStackTrace();
-		}
-		
-		return result;
-	}
-
-	public boolean updateAccount(AccountVO account) {
-		boolean result = false;
-		Connection con = null;
-		try {
-			con = DBCPConnectionPool.getDataSource().getConnection();
-			con.setAutoCommit(false);
-		} catch (SQLException e) {
-			e.printStackTrace();
-		}
-		
-		AccountDAO dao = new AccountDAO(con);
-		int affectedRows = dao.update(account);
 		
 		try {
 			if (affectedRows == 1) {
@@ -150,7 +148,7 @@ public class AccountService {
 			e.printStackTrace();
 		}
 		
-		AccountDAO dao = new AccountDAO(con);
+		AccountDAOOld dao = new AccountDAOOld(con);
 		ObservableList<AccountVO> list = dao.selectByName(name);
 		
 		try {
@@ -162,46 +160,33 @@ public class AccountService {
 		return list;
 	}
 
-	public AccountVO selectStaffAccountbyUsername(String username) {
+	public boolean updateAccount(AccountVO account) {
+		boolean result = false;
 		Connection con = null;
 		try {
 			con = DBCPConnectionPool.getDataSource().getConnection();
-			// con.setAutoCommit(false);
+			con.setAutoCommit(false);
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
 		
-		AccountDAO dao = new AccountDAO(con);
-		AccountVO account = dao.selectStaffByUsername(username);
+		AccountDAOOld dao = new AccountDAOOld(con);
+		int affectedRows = dao.update(account);
 		
 		try {
+			if (affectedRows == 1) {
+				result = true;
+				con.commit();
+			} else {
+				result = false;
+				con.rollback();
+			}
 			con.close();
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
 		
-		return account;
-	}
-
-	public ObservableList<AccountVO> selectStaffAccountsByName(String name) {
-		Connection con = null;
-		try {
-			con = DBCPConnectionPool.getDataSource().getConnection();
-			// con.setAutoCommit(false);
-		} catch (SQLException e) {
-			e.printStackTrace();
-		}
-		
-		AccountDAO dao = new AccountDAO(con);
-		ObservableList<AccountVO> list = dao.selectStaffByName(name);
-		
-		try {
-			con.close();
-		} catch (SQLException e) {
-			e.printStackTrace();
-		}
-		
-		return list;
+		return result;
 	}
 
 	/*
@@ -233,7 +218,7 @@ public class AccountService {
 			}
 		}
 		
-		AccountDAO daoA = new AccountDAO(con);
+		AccountDAOOld daoA = new AccountDAOOld(con);
 		AccountVO account = new AccountVO(ano, "", "", "1970-01-01", "1970-01-01",
 											"", "", "", -1, -1, username, "");
 		account.setAdisabled(true);
