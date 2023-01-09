@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <classpath>
 	<classpathentry kind="src" path="src"/>
+	<classpathentry kind="src" path="resources"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER/org.eclipse.jdt.internal.debug.ui.launcher.StandardVMType/jdk-11.0.17">
 		<attributes>
 			<attribute name="module" value="true"/>
@@ -56,5 +57,6 @@
 	<classpathentry kind="lib" path="lib/okio-2.8.0.jar"/>
 	<classpathentry kind="lib" path="lib/retrofit-2.9.0.jar"/>
 	<classpathentry kind="lib" path="lib/converter-gson-2.9.0.jar"/>
+	<classpathentry kind="lib" path="C:/Program Files/Java/jdk-11.0.17/mybatis/mybatis-3.5.11.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>
