@@ -1,8 +1,10 @@
 package liverary.controller;
 
 import java.net.URL;
+import java.util.List;
 import java.util.ResourceBundle;
 
+import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
@@ -53,8 +55,9 @@ public class UserHistoryModalController implements Initializable {
 				lentAtColumn, returnedDateColumn, isbnColumn, titleColumn, authorColumn, publisherColumn, statusColumn);
 		
 		LoanService service = new LoanService();
-		ObservableList<LoanVO> list = service.selectLoanBookRowsOfAccount(Globals.getCurrentSessionNo());
-		historyTableView.setItems(list);
+		List<LoanVO> list = service.selectLoanBookRowsOfAccount(Globals.getCurrentSessionNo());
+		ObservableList<LoanVO> obList = FXCollections.observableArrayList(list);
+		historyTableView.setItems(obList);
 	}
 	
 }

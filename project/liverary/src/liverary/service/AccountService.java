@@ -6,8 +6,6 @@ import java.util.List;
 import org.apache.ibatis.session.SqlSession;
 import org.apache.ibatis.session.SqlSessionFactory;
 
-import javafx.collections.FXCollections;
-import javafx.collections.ObservableList;
 import liverary.dao.AccountDAO;
 import liverary.dao.LoanDAO;
 import liverary.mybatis.MyBatisConnectionFactory;
@@ -96,7 +94,7 @@ public class AccountService {
 		return account;
 	}
 
-	public ObservableList<AccountVO> selectAccountsByName(String name, boolean isStaff) {
+	public List<AccountVO> selectAccountsByName(String name, boolean isStaff) {
 		List<AccountVO> list = null;
 		
 		SqlSessionFactory factory = MyBatisConnectionFactory.getSqlSessionFactory();
@@ -117,17 +115,12 @@ public class AccountService {
 			e.printStackTrace();
 		} finally {
 			session.close();
-		}		
-		
-		ObservableList<AccountVO> obList = FXCollections.observableArrayList();
-		for (AccountVO account : list) {
-			obList.add(account);
 		}
 		
-		return obList;
+		return list;
 	}
 
-	public ObservableList<AccountVO> selectAccountsByName(String name) {
+	public List<AccountVO> selectAccountsByName(String name) {
 		return selectAccountsByName(name, false);
 	}
 	

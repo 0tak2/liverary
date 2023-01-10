@@ -1,10 +1,10 @@
 package liverary.controller;
 
 import java.net.URL;
+import java.util.List;
 import java.util.Optional;
 import java.util.ResourceBundle;
 
-import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
@@ -128,7 +128,7 @@ public class EditBookInfoModalController implements Initializable {
 		}
 		
 		LoanService loanService = new LoanService();
-		ObservableList<LoanVO> list = loanService.selectRecentLoanRecordsByISBN(isbn);
+		List<LoanVO> list = loanService.selectRecentLoanRecordsByISBN(isbn);
 		if (list.size() == 1 && !list.get(0).isAvailable()) {
 			(new Alert(
 					AlertType.ERROR, "해당 자료에 대한 대출/반납 이력이 존재하여 삭제할 수 없습니다.")).showAndWait();

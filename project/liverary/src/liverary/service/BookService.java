@@ -5,15 +5,13 @@ import java.util.List;
 import org.apache.ibatis.session.SqlSession;
 import org.apache.ibatis.session.SqlSessionFactory;
 
-import javafx.collections.FXCollections;
-import javafx.collections.ObservableList;
 import liverary.dao.BookDAO;
 import liverary.mybatis.MyBatisConnectionFactory;
 import liverary.vo.BookVO;
 
 public class BookService {
 
-	public ObservableList<BookVO> selectBooksByISBN(String isbn) {
+	public List<BookVO> selectBooksByISBN(String isbn) {
 		List<BookVO> list = null;
 		
 		SqlSessionFactory factory = MyBatisConnectionFactory.getSqlSessionFactory();
@@ -31,15 +29,10 @@ public class BookService {
 			session.close();
 		}
 		
-		ObservableList<BookVO> obList = FXCollections.observableArrayList();
-		for (BookVO row : list) {
-			obList.add(row);
-		}
-		
-		return obList;
+		return list;
 	}
 
-	public ObservableList<BookVO> selectBooksByKeyword(String keyword) {
+	public List<BookVO> selectBooksByKeyword(String keyword) {
 		List<BookVO> list = null;
 		
 		SqlSessionFactory factory = MyBatisConnectionFactory.getSqlSessionFactory();
@@ -57,12 +50,7 @@ public class BookService {
 			session.close();
 		}
 		
-		ObservableList<BookVO> obList = FXCollections.observableArrayList();
-		for (BookVO row : list) {
-			obList.add(row);
-		}
-		
-		return obList;
+		return list;
 	}
 
 	public boolean insertNewBook(BookVO book) {

@@ -8,8 +8,6 @@ import java.util.List;
 import org.apache.ibatis.session.SqlSession;
 import org.apache.ibatis.session.SqlSessionFactory;
 
-import javafx.collections.FXCollections;
-import javafx.collections.ObservableList;
 import liverary.Globals;
 import liverary.dao.AccountDAO;
 import liverary.dao.LoanDAO;
@@ -22,7 +20,7 @@ import liverary.vo.LoanVO;
 
 public class LoanService {
 
-	public ObservableList<LoanVO> selectRecentLoanRecordsByISBN(String isbn) {
+	public List<LoanVO> selectRecentLoanRecordsByISBN(String isbn) {
 		List<LoanVO> list = null;
 		
 		SqlSessionFactory factory = MyBatisConnectionFactory.getSqlSessionFactory();
@@ -40,20 +38,18 @@ public class LoanService {
 			session.close();
 		}
 		
-		ObservableList<LoanVO> obList = FXCollections.observableArrayList();
 		for (LoanVO row : list) {
 			String available_kor = "대출불가";
 			if (row.isAvailable()) {
 				available_kor = "대출가능";
 			}
 			row.setAvailable_kor(available_kor);
-			obList.add(row);
 		}
 		
-		return obList;
+		return list;
 	}
 
-	public ObservableList<LoanVO> selectRecentLoanRecordsByKeyword(String keyword) {
+	public List<LoanVO> selectRecentLoanRecordsByKeyword(String keyword) {
 		List<LoanVO> list = null;
 		
 		SqlSessionFactory factory = MyBatisConnectionFactory.getSqlSessionFactory();
@@ -71,21 +67,18 @@ public class LoanService {
 			session.close();
 		}
 		
-		ObservableList<LoanVO> obList = FXCollections.observableArrayList();
 		for (LoanVO row : list) {
 			String available_kor = "대출불가";
 			if (row.isAvailable()) {
 				available_kor = "대출가능";
 			}
 			row.setAvailable_kor(available_kor);
-			
-			obList.add(row);
 		}
 		
-		return obList;
+		return list;
 	}
 
-	public ObservableList<LoanByAccountVO> selectLoanWithAccountInfoOfAccount(int ano) {
+	public List<LoanByAccountVO> selectLoanWithAccountInfoOfAccount(int ano) {
 		List<LoanByAccountVO> list = null;
 		
 		SqlSessionFactory factory = MyBatisConnectionFactory.getSqlSessionFactory();
@@ -103,16 +96,11 @@ public class LoanService {
 			session.close();
 		}
 		
-		ObservableList<LoanByAccountVO> obList = FXCollections.observableArrayList();
-		for (LoanByAccountVO row : list) {
-			obList.add(row);
-		}
-		
-		return obList;
+		return list;
 	}
 
 	public HashMap<String, Integer> selectLoanStatusOfAccount(int ano) {
-		ObservableList<LoanByAccountVO> list = selectLoanWithAccountInfoOfAccount(ano);
+		List<LoanByAccountVO> list = selectLoanWithAccountInfoOfAccount(ano);
 		
 		int total = 0;
 		int penalty = 0;
@@ -138,7 +126,7 @@ public class LoanService {
 		return result;
 	}
 
-	public ObservableList<LoanVO> selectLoanBookRowsOfAccount(int ano) {
+	public List<LoanVO> selectLoanBookRowsOfAccount(int ano) {
 		List<LoanVO> list = null;
 		
 		SqlSessionFactory factory = MyBatisConnectionFactory.getSqlSessionFactory();
@@ -156,7 +144,6 @@ public class LoanService {
 			session.close();
 		}
 		
-		ObservableList<LoanVO> obList = FXCollections.observableArrayList();
 		for (LoanVO row : list) {
 			if (row.getAvailable_kor().equals("반납완료")) {
 				LocalDate returnedDate = row.getLreturnedAt();
@@ -167,13 +154,12 @@ public class LoanService {
 					row.setAvailable_kor("반납완료 (정상)");
 				}
 			}
-			obList.add(row);
 		}
 		
-		return obList;
+		return list;
 	}
 	
-	public ObservableList<LoanVO> selectLoanBookRowsByKeywordWithDates(String keyword, String startDateStr, String endDateStr) {		
+	public List<LoanVO> selectLoanBookRowsByKeywordWithDates(String keyword, String startDateStr, String endDateStr) {		
 		List<LoanVO> list = null;
 		
 		LocalDate startDate = DateHelper.ConvertStrToLocalDate(startDateStr);
@@ -196,7 +182,6 @@ public class LoanService {
 			session.close();
 		}
 		
-		ObservableList<LoanVO> obList = FXCollections.observableArrayList();
 		for (LoanVO row : list) {
 			if (row.getAvailable_kor().equals("반납완료")) {
 				LocalDate returnedDate = row.getLreturnedAt();
@@ -207,13 +192,12 @@ public class LoanService {
 					row.setAvailable_kor("반납완료 (정상)");
 				}
 			}
-			obList.add(row);
 		}
 		
-		return obList;
+		return list;
 	}
 
-	public ObservableList<LoanVO> selectLoanBookRowsByISBNWithDates(String isbn, String startDateStr, String endDateStr) {
+	public List<LoanVO> selectLoanBookRowsByISBNWithDates(String isbn, String startDateStr, String endDateStr) {
 		List<LoanVO> list = null;
 		
 		LocalDate startDate = DateHelper.ConvertStrToLocalDate(startDateStr);
@@ -236,7 +220,6 @@ public class LoanService {
 			session.close();
 		}
 		
-		ObservableList<LoanVO> obList = FXCollections.observableArrayList();
 		for (LoanVO row : list) {
 			if (row.getAvailable_kor().equals("반납완료")) {
 				LocalDate returnedDate = row.getLreturnedAt();
@@ -247,13 +230,12 @@ public class LoanService {
 					row.setAvailable_kor("반납완료 (정상)");
 				}
 			}
-			list.add(row);
 		}
 		
-		return obList;
+		return list;
 	}
 
-	public ObservableList<LoanVO> selectNoReturnedBookRowsByKeywordWithDates(String keyword, String startDateStr,
+	public List<LoanVO> selectNoReturnedBookRowsByKeywordWithDates(String keyword, String startDateStr,
 			String endDateStr) {
 		List<LoanVO> list = null;
 		
@@ -277,18 +259,16 @@ public class LoanService {
 			session.close();
 		}
 		
-		ObservableList<LoanVO> obList = FXCollections.observableArrayList();
 		for (LoanVO row : list) {
 			if (!row.isAvailable()) {
-				row.setAvailable_kor("대출중");
-				obList.add(row);				
+				row.setAvailable_kor("대출중");			
 			}
 		}
 		
-		return obList;
+		return list;
 	}
 	
-	public ObservableList<LoanVO> selectNoReturnedBookRowsByISBNWithDates(String isbn, String startDateStr,
+	public List<LoanVO> selectNoReturnedBookRowsByISBNWithDates(String isbn, String startDateStr,
 			String endDateStr) {
 		List<LoanVO> list = null;
 		
@@ -312,15 +292,13 @@ public class LoanService {
 			session.close();
 		}
 		
-		ObservableList<LoanVO> obList = FXCollections.observableArrayList();
 		for (LoanVO row : list) {
 			if (!row.isAvailable()) {
-				row.setAvailable_kor("대출중");
-				obList.add(row);				
+				row.setAvailable_kor("대출중");			
 			}
 		}
 		
-		return obList;
+		return list;
 	}
 
 	public boolean getIsNeededPenalty(LoanVO row) {

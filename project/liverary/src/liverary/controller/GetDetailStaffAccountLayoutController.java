@@ -2,6 +2,7 @@ package liverary.controller;
 
 import java.io.IOException;
 import java.net.URL;
+import java.util.List;
 import java.util.ResourceBundle;
 
 import javafx.application.Platform;
@@ -137,13 +138,14 @@ public class GetDetailStaffAccountLayoutController implements Initializable {
 	
 	private void setDataToTableViewByName() {
 		AccountService service = new AccountService();
-		ObservableList<AccountVO> list = service.selectAccountsByName(searchKeywordTextField.getText(), true);
+		List<AccountVO> list = service.selectAccountsByName(searchKeywordTextField.getText(), true);
+		ObservableList<AccountVO> obList = FXCollections.observableArrayList(list);
 		if (list.isEmpty()) {
 			(new Alert(
 					AlertType.WARNING, "조건에 맞는 계정을 찾을 수 없습니다.")).showAndWait();
 		} else {
 			Platform.runLater(() -> {
-				searchTableView.setItems(list);
+				searchTableView.setItems(obList);
 			});			
 		}
 	}

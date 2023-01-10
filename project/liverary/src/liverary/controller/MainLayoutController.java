@@ -2,6 +2,7 @@ package liverary.controller;
 
 import java.io.IOException;
 import java.net.URL;
+import java.util.List;
 import java.util.Optional;
 import java.util.ResourceBundle;
 
@@ -159,18 +160,20 @@ public class MainLayoutController implements Initializable {
 		}
 		if (bookSearchByType.equals("ISBN")) {
 			LoanService service = new LoanService();
-			ObservableList<LoanVO> list = service.selectRecentLoanRecordsByISBN(query);
+			List<LoanVO> list = service.selectRecentLoanRecordsByISBN(query);
+			ObservableList<LoanVO> obList = FXCollections.observableArrayList(list);
 			
-			bookSearchTableView.setItems(list);
+			bookSearchTableView.setItems(obList);
 			if (list.isEmpty()) {
 				(new Alert(
 						AlertType.WARNING, "조건에 맞는 자료를 찾을 수 없습니다.")).showAndWait();
 			}
 		} else if (bookSearchByType.equals("표제")) {
 			LoanService service = new LoanService();
-			ObservableList<LoanVO> list = service.selectRecentLoanRecordsByKeyword(query);
+			List<LoanVO> list = service.selectRecentLoanRecordsByKeyword(query);
+			ObservableList<LoanVO> obList = FXCollections.observableArrayList(list);
 			
-			bookSearchTableView.setItems(list);
+			bookSearchTableView.setItems(obList);
 			if (list.isEmpty()) {
 				(new Alert(
 						AlertType.WARNING, "조건에 맞는 자료를 찾을 수 없습니다.")).showAndWait();

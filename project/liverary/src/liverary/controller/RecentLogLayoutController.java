@@ -4,9 +4,11 @@ import java.io.IOException;
 import java.net.URL;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
+import java.util.List;
 import java.util.ResourceBundle;
 
 import javafx.application.Platform;
+import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -123,29 +125,31 @@ public class RecentLogLayoutController implements Initializable {
 	
 	private void setDataToTableViewByKeyword() {
 		LoanService service = new LoanService();
-		ObservableList<LoanVO> list = service.selectLoanBookRowsByKeywordWithDates(
+		List<LoanVO> list = service.selectLoanBookRowsByKeywordWithDates(
 				bookSearchKeywordTextField.getText(), startDate, endDate);
+		ObservableList<LoanVO> obList = FXCollections.observableArrayList(list);
 
 		if (list.isEmpty() && !startup) {
 			(new Alert(
 					AlertType.WARNING, "조건에 맞는 자료를 찾을 수 없습니다.")).showAndWait();
 		} else {
 			Platform.runLater(() -> {
-				bookSearchTableView.setItems(list);
+				bookSearchTableView.setItems(obList);
 			});			
 		}
 	}
 	
 	private void setDataToTableViewByISBN() {
 		LoanService service = new LoanService();
-		ObservableList<LoanVO> list = service.selectLoanBookRowsByISBNWithDates(
+		List<LoanVO> list = service.selectLoanBookRowsByISBNWithDates(
 				bookSearchKeywordTextField.getText(), startDate, endDate);
+		ObservableList<LoanVO> obList = FXCollections.observableArrayList(list);
 		if (list.isEmpty() && !startup) {
 			(new Alert(
 					AlertType.WARNING, "조건에 맞는 자료를 찾을 수 없습니다.")).showAndWait();
 		} else {
 			Platform.runLater(() -> {
-				bookSearchTableView.setItems(list);
+				bookSearchTableView.setItems(obList);
 			});			
 		}
 	}
