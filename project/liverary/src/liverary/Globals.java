@@ -1,5 +1,7 @@
 package liverary;
 
+import java.time.LocalDate;
+
 import liverary.vo.AccountVO;
 
 public class Globals {
@@ -7,6 +9,7 @@ public class Globals {
 	private static int pointPlusAmount;
 	private static int pointMinusAmount;
 	private static int maxLoanBooksAmount;
+	private static int loanDays;
 	private static String nlApiSecret;
 	private static int nlApiMaxItems;
 	
@@ -53,6 +56,14 @@ public class Globals {
 		Globals.nlApiMaxItems = nlApiMaxItems;
 	}
 
+	public static int getLoanDays() {
+		return loanDays;
+	}
+
+	public static void setLoanDays(int loanDays) {
+		Globals.loanDays = loanDays;
+	}
+
 	@Deprecated
 	public static AccountVO getCurrentSession() {
 		return currentSession;
@@ -74,11 +85,11 @@ public class Globals {
 		return currentSession.getAdepartment();
 	}
 	
-	public static String getCurrentSessionBirth() {
+	public static LocalDate getCurrentSessionBirth() {
 		return currentSession.getAbirth();
 	}
 
-	public static String getCurrentSessionCreatedAt() {
+	public static LocalDate getCurrentSessionCreatedAt() {
 		return currentSession.getAcreatedAt();
 	}
 

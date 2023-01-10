@@ -32,4 +32,20 @@
 				</if>
 			</if>
 	</select>
+	<insert id="insert"
+		parameterType="Account">
+		INSERT INTO `accountsTBL`(aname, adepartment, abirth, acreatedAt, 
+					aphone, aemail, aaddr, apoint, alevel, ausername, apassword) 
+					VALUES (#{aname}, #{adepartment}, #{abirth}, #{acreatedAt},
+					#{aphone}, #{aemail}, #{aaddr}, #{apoint}, #{alevel}, #{ausername}, #{apassword})
+	</insert>
+	<update id="update"
+		parameterType="Account">
+		UPDATE `accountsTBL` 
+		SET
+			aname = #{aname}, adepartment = #{adepartment}, aphone = #{aphone}, aemail = #{aemail}, aaddr = #{aaddr}, 
+			apassword = #{apassword}, adepartment = #{adepartment}, abirth = #{abirth}, acreatedAt = #{acreatedAt},
+			apoint = #{apoint}, ausername = #{ausername}, adisabled = #{adisabled}, adisabledAt = #{adisabledAt}
+		WHERE ano = #{ano} AND adisabled = FALSE
+	</update>
 </mapper>

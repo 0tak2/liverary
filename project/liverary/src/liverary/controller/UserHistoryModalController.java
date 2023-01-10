@@ -23,7 +23,7 @@ public class UserHistoryModalController implements Initializable {
 		// 테이블 뷰 초기화
 		TableColumn<LoanVO, String> lentAtColumn = new TableColumn<>("대출일자");
 		lentAtColumn.setMinWidth(75);
-		lentAtColumn.setCellValueFactory(new PropertyValueFactory<>("lcreatedat"));
+		lentAtColumn.setCellValueFactory(new PropertyValueFactory<>("lcreatedAt"));
 		
 		TableColumn<LoanVO, String> returnedDateColumn = new TableColumn<>("반납일자");
 		returnedDateColumn.setMinWidth(75);

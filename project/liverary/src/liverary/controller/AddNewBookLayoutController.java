@@ -139,6 +139,12 @@ public class AddNewBookLayoutController implements Initializable {
 	
 	@FXML
 	private void handleSearchBtn() {
+		if (titleTextField.getText().equals("")) {
+			(new Alert(
+					AlertType.ERROR, "먼저 검색하고자 하는 표제를 입력하십시오.")).showAndWait();
+			return;
+		}
+		
 		Parent modalRoot = null;
 		controller = null;
 		try {

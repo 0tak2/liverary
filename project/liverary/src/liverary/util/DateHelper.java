@@ -2,6 +2,7 @@ package liverary.util;
 
 import java.time.LocalDate;
 import java.time.Period;
+import java.time.format.DateTimeFormatter;
 
 public class DateHelper {
 
@@ -10,10 +11,22 @@ public class DateHelper {
 		return date.toString();
 	}
 	
-	public static String AddDaysToTodayDateStr(long days) {
+	public static LocalDate todayDate() {
+		return LocalDate.now();
+	}
+	
+	public static LocalDate ConvertStrToLocalDate(String dateStr) {
+		return LocalDate.parse(dateStr);
+	}
+	
+	public static String ConvertLocalDateToStr(LocalDate date) {
+		return date.format(DateTimeFormatter.BASIC_ISO_DATE);
+	}	
+	
+	public static LocalDate AddDaysToTodayDate(long days) {
 		LocalDate date = LocalDate.now();
 		LocalDate dueDate = date.plusDays(days);
-		return dueDate.toString();
+		return dueDate;
 	}
 	
 	public static int getDifferenceByToday(LocalDate targetDate) {

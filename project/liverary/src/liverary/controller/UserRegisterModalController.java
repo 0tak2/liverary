@@ -96,8 +96,9 @@ public class UserRegisterModalController implements Initializable {
 		
 		String birth = year + "-" + months + "-" + day;
 
-		AccountVO newAccount = new AccountVO(name, birth, DateHelper.todayDateStr(), phone,
-												email, addr, 0, 0, username, password);
+		AccountVO newAccount = new AccountVO(name,
+												DateHelper.ConvertStrToLocalDate(birth), DateHelper.todayDate(),
+												phone, 	email, addr, 0, 0, username, password);
 		
 		AccountService service = new AccountService();
 		boolean success = service.insertNewAccount(newAccount);

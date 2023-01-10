@@ -12,6 +12,10 @@
 	
 	<typeAliases>
 		<typeAlias type="liverary.vo.AccountVO" alias="Account" />
+		<typeAlias type="liverary.vo.LoanVO" alias="Loan" />
+		<typeAlias type="liverary.vo.LoanOptionVO" alias="LoanOption" />
+		<typeAlias type="liverary.vo.LoanByAccountVO" alias="LoanByAccount" />
+		<typeAlias type="liverary.vo.BookVO" alias="Book" />
 	</typeAliases>
 	
 	<environments default="development">	
@@ -30,6 +34,8 @@
 	
 	<mappers>
 		<mapper resource="./sqlmap/Account.xml" />
+		<mapper resource="./sqlmap/Loan.xml" />
+		<mapper resource="./sqlmap/Book.xml" />
 	</mappers>
 	
 </configuration>

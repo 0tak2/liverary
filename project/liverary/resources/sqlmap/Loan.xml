@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org/DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+
+<mapper namespace="liverary.loan">
+	<select id="selectRecent"
+		parameterType="Loan" resultType="Loan">
+			SELECT * FROM recentLoanRecordByBookVIEW
+			<if test='bisbn != null' >
+				WHERE bisbn = #{bisbn}
+			</if>
+			<if test='btitle != null' >
+				WHERE btitle like CONCAT('%', #{btitle}, '%')
+			</if>
+			ORDER BY btitle
+	</select>
+	<select id="select"
+		parameterType="LoanOption" resultType="Loan">
+			SELECT * from loanRecordWithBookInfoVIEW
+			<if test='ano != 0' >
+				WHERE ano = #{ano} 
+			</if>
+			<if test='bisbn != null' >
+				WHERE bisbn = #{bisbn}
+			</if>
+			<if test='btitle != null' >
+				WHERE btitle like CONCAT('%', #{btitle}, '%')
+			</if>
+			<if test='lcreatedAt != null' >
+				AND lcreatedAt BETWEEN #{lcreatedAtStart} AND #{lcreatedAtEnd}
+			</if>
+			ORDER BY lno DESC
+	</select>
+	<select id="selectWithAccount"
+		parameterType="LoanByAccount" resultType="LoanByAccount">
+			SELECT * FROM accountsWithLoanRecordsVIEW
+			<if test='ano != 0' >
+				WHERE ano = #{ano} 
+			</if>
+	</select>
+	<insert id="insert"
+		parameterType="Loan">
+		INSERT INTO loanrecordtbl(bisbn, ano, lcreatedAt, ldueDate, lreturnedAt)
+		VALUES (#{bisbn}, #{ano}, #{lcreatedAt}, #{ldueDate}, null)
+	</insert>
+	<update id="update"
+		parameterType="Loan">
+		UPDATE loanRecordTBL
+		SET lreturnedAt = #{lreturnedAt}
+		WHERE lno =  #{lno}
+	</update>
+</mapper>

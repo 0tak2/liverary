@@ -13,8 +13,8 @@ public class LoanByAccountVO {
 	private String ausername;
 	private int lno;
 	private String bisbn;
-	private String lcreatedat;
-	private String lduedate;
+	private String lcreatedAt;
+	private String ldueDate;
 	private String lreturnedAt;
 	private String status_kor;
 	
@@ -22,8 +22,8 @@ public class LoanByAccountVO {
 	}
 
 	public LoanByAccountVO(int ano, String aname, String abirth, String acreatedAt, String aphone, String aemail,
-			String aaddr, int apoint, int alevel, String ausername, int lno, String bisbn, String lcreatedat,
-			String lduedate, String lreturnedAt) {
+			String aaddr, int apoint, int alevel, String ausername, int lno, String bisbn, String lcreatedAt,
+			String ldueDate, String lreturnedAt) {
 		super();
 		this.ano = ano;
 		this.aname = aname;
@@ -37,8 +37,8 @@ public class LoanByAccountVO {
 		this.ausername = ausername;
 		this.lno = lno;
 		this.bisbn = bisbn;
-		this.lcreatedat = lcreatedat;
-		this.lduedate = lduedate;
+		this.lcreatedAt = lcreatedAt;
+		this.ldueDate = ldueDate;
 		this.lreturnedAt = lreturnedAt;
 	}
 
@@ -138,20 +138,20 @@ public class LoanByAccountVO {
 		this.bisbn = bisbn;
 	}
 
-	public String getLcreatedat() {
-		return lcreatedat;
+	public String getLcreatedAt() {
+		return lcreatedAt;
 	}
 
-	public void setLcreatedat(String lcreatedat) {
-		this.lcreatedat = lcreatedat;
+	public void setLcreatedAt(String lcreatedAt) {
+		this.lcreatedAt = lcreatedAt;
 	}
 
-	public String getLduedate() {
-		return lduedate;
+	public String getLdueDate() {
+		return ldueDate;
 	}
 
-	public void setLduedate(String lduedate) {
-		this.lduedate = lduedate;
+	public void setLdueDate(String ldueDate) {
+		this.ldueDate = ldueDate;
 	}
 
 	public String getLreturnedAt() {

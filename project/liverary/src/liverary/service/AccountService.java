@@ -1,20 +1,19 @@
 package liverary.service;
 
-import java.sql.Connection;
-import java.sql.SQLException;
+import java.time.LocalDate;
 import java.util.List;
 
+import org.apache.ibatis.session.SqlSession;
 import org.apache.ibatis.session.SqlSessionFactory;
 
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import liverary.dao.AccountDAO;
-import liverary.dao.AccountDAOOld;
-import liverary.dao.DBCPConnectionPool;
 import liverary.dao.LoanDAO;
 import liverary.mybatis.MyBatisConnectionFactory;
 import liverary.util.DateHelper;
 import liverary.vo.AccountVO;
+import liverary.vo.LoanOptionVO;
 import liverary.vo.LoanVO;
 
 public class AccountService {
@@ -23,7 +22,9 @@ public class AccountService {
 		AccountVO account = null;
 		
 		SqlSessionFactory factory = MyBatisConnectionFactory.getSqlSessionFactory();
-		AccountDAO dao = new AccountDAO(factory);
+		SqlSession session = factory.openSession();
+		
+		AccountDAO dao = new AccountDAO(session);
 		
 		AccountVO targetAccount = new AccountVO();
 		targetAccount.setAusername(username);
@@ -31,10 +32,16 @@ public class AccountService {
 			targetAccount.setAlevel(1);
 		}
 		
-		if (includeDisabled) {
-			account = dao.selectOneIncludeDisabled(targetAccount);			
-		} else {
-			account = dao.selectOne(targetAccount);	
+		try {
+			if (includeDisabled) {
+				account = dao.selectOneIncludeDisabled(targetAccount);			
+			} else {
+				account = dao.selectOne(targetAccount);	
+			}			
+		} catch (Exception e) {
+			e.printStackTrace();
+		} finally {
+			session.close();
 		}
 		
 		return account;
@@ -48,13 +55,21 @@ public class AccountService {
 		AccountVO account = null;
 		
 		SqlSessionFactory factory = MyBatisConnectionFactory.getSqlSessionFactory();
-		AccountDAO dao = new AccountDAO(factory);
+		SqlSession session = factory.openSession();
+		
+		AccountDAO dao = new AccountDAO(session);
 		
 		AccountVO targetAccount = new AccountVO();
 		targetAccount.setAusername(username);
 		targetAccount.setApassword(password);
-
-		account = dao.selectOneIncludeDisabled(targetAccount);
+		
+		try {
+			account = dao.selectOneIncludeDisabled(targetAccount);			
+		} catch (Exception e) {
+			e.printStackTrace();
+		} finally {
+			session.close();
+		}
 		
 		return account;
 	}
@@ -63,12 +78,20 @@ public class AccountService {
 		AccountVO account = null;
 		
 		SqlSessionFactory factory = MyBatisConnectionFactory.getSqlSessionFactory();
-		AccountDAO dao = new AccountDAO(factory);
+		SqlSession session = factory.openSession();
+		
+		AccountDAO dao = new AccountDAO(session);
 		
 		AccountVO targetAccount = new AccountVO();
 		targetAccount.setAno(no);
-
-		account = dao.selectOne(targetAccount);
+		
+		try {
+			account = dao.selectOne(targetAccount);
+		} catch (Exception e) {
+			e.printStackTrace();
+		} finally {
+			session.close();
+		}
 		
 		return account;
 	}
@@ -77,7 +100,9 @@ public class AccountService {
 		List<AccountVO> list = null;
 		
 		SqlSessionFactory factory = MyBatisConnectionFactory.getSqlSessionFactory();
-		AccountDAO dao = new AccountDAO(factory);
+		SqlSession session = factory.openSession();
+		
+		AccountDAO dao = new AccountDAO(session);
 		
 		AccountVO targetAccount = new AccountVO();
 		targetAccount.setAname(name);
@@ -86,7 +111,13 @@ public class AccountService {
 			targetAccount.setAlevel(1);			
 		}
 		
-		list = dao.selectList(targetAccount);
+		try {
+			list = dao.selectList(targetAccount);
+		} catch (Exception e) {
+			e.printStackTrace();
+		} finally {
+			session.close();
+		}		
 		
 		ObservableList<AccountVO> obList = FXCollections.observableArrayList();
 		for (AccountVO account : list) {
@@ -99,60 +130,63 @@ public class AccountService {
 	public ObservableList<AccountVO> selectAccountsByName(String name) {
 		return selectAccountsByName(name, false);
 	}
-
-	public boolean insertNewAccount(AccountVO newAccount) {
+	
+	public boolean insertNewAccount(AccountVO account) {
 		boolean result = false;
-		Connection con = null;
+		int affectedRows = 0;
+		
+		SqlSessionFactory factory = MyBatisConnectionFactory.getSqlSessionFactory();
+		SqlSession session = factory.openSession();
+		
+		AccountDAO dao = new AccountDAO(session);
+		
 		try {
-			con = DBCPConnectionPool.getDataSource().getConnection();
-			con.setAutoCommit(false);
-		} catch (SQLException e) {
+			affectedRows = dao.insert(account);
+		} catch (Exception e) {
+			session.rollback();
+			session.close();
 			e.printStackTrace();
-		}
-		
-		AccountDAOOld dao = new AccountDAOOld(con);
-		int affectedRows = dao.insert(newAccount);
-		
-		try {
+			result = false;
+		} finally {
 			if (affectedRows == 1) {
+				session.commit();
 				result = true;
-				con.commit();
 			} else {
+				session.rollback();
 				result = false;
-				con.rollback();
 			}
-			con.close();
-		} catch (SQLException e) {
-			e.printStackTrace();
+			session.close();
 		}
 		
 		return result;
 	}
-
+	
 	public boolean updateAccount(AccountVO account) {
 		boolean result = false;
-		Connection con = null;
+		int affectedRows = 0;
+		
+		SqlSessionFactory factory = MyBatisConnectionFactory.getSqlSessionFactory();
+		SqlSession session = factory.openSession();
+		
+		AccountDAO dao = new AccountDAO(session);
+		
 		try {
-			con = DBCPConnectionPool.getDataSource().getConnection();
-			con.setAutoCommit(false);
-		} catch (SQLException e) {
+			affectedRows = dao.update(account);			
+		} catch (Exception e) {
+			result = false;
+			session.rollback();
+			session.close();
 			e.printStackTrace();
-		}
-		
-		AccountDAOOld dao = new AccountDAOOld(con);
-		int affectedRows = dao.update(account);
-		
-		try {
+		} finally {
 			if (affectedRows == 1) {
 				result = true;
-				con.commit();
+				session.commit();
+				session.close();
 			} else {
 				result = false;
-				con.rollback();
+				session.rollback();
+				session.close();
 			}
-			con.close();
-		} catch (SQLException e) {
-			e.printStackTrace();
 		}
 		
 		return result;
@@ -162,16 +196,17 @@ public class AccountService {
 	 * @return 성공시 1, 대출도서가 있어서 불가시 11
 	 **/
 	public int updateAccountToEmptyRow(int ano, String username) {
-		Connection con = null;
-		try {
-			con = DBCPConnectionPool.getDataSource().getConnection();
-			con.setAutoCommit(false);
-		} catch (SQLException e) {
-			e.printStackTrace();
-		}
+		int affectedRows = 0;
 		
-		LoanDAO daoL = new LoanDAO(con);
-		ObservableList<LoanVO> list = daoL.selectByAno(ano);
+		SqlSessionFactory factory = MyBatisConnectionFactory.getSqlSessionFactory();
+		SqlSession session = factory.openSession();
+		
+		LoanDAO loanDao = new LoanDAO(session);
+		
+		LoanOptionVO target = new LoanOptionVO();
+		target.setAno(ano);
+		
+		List<LoanVO> list = loanDao.select(target);
 
 		for (LoanVO row : list) {
 			if (row.getLno() == 0) {
@@ -179,31 +214,31 @@ public class AccountService {
 			}
 			
 			if(row.getLreturnedAt() == null) {
-				return 11;
-			}
-			
-			if(row.getLreturnedAt().equals("")) {
+				session.close();
 				return 11;
 			}
 		}
 		
-		AccountDAOOld daoA = new AccountDAOOld(con);
-		AccountVO account = new AccountVO(ano, "", "", "1970-01-01", "1970-01-01",
+		AccountDAO accountDao = new AccountDAO(session);
+		AccountVO account = new AccountVO(ano, "", "", LocalDate.of(1970, 1, 1), LocalDate.of(1970, 1, 1),
 											"", "", "", -1, -1, username, "");
 		account.setAdisabled(true);
-		account.setAdisabledAt(DateHelper.todayDateStr());
-		
-		int affectedRows = daoA.update(account);
+		account.setAdisabledAt(DateHelper.todayDate());
 		
 		try {
-			if (affectedRows == 1) {
-				con.commit();
-			} else {
-				con.rollback();
-			}
-			con.close();
-		} catch (SQLException e) {
+			affectedRows = accountDao.update(account);			
+		} catch (Exception e) {
+			session.rollback();
+			session.close();
 			e.printStackTrace();
+		} finally {
+			if (affectedRows == 1) {
+				session.commit();
+				session.close();
+			} else {
+				session.rollback();
+				session.close();
+			}
 		}
 		
 		return affectedRows;

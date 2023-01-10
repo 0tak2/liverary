@@ -1,101 +1,117 @@
 package liverary.service;
 
-import java.sql.Connection;
-import java.sql.SQLException;
+import java.util.List;
 
+import org.apache.ibatis.session.SqlSession;
+import org.apache.ibatis.session.SqlSessionFactory;
+
+import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import liverary.dao.BookDAO;
-import liverary.dao.DBCPConnectionPool;
+import liverary.mybatis.MyBatisConnectionFactory;
 import liverary.vo.BookVO;
 
 public class BookService {
 
 	public ObservableList<BookVO> selectBooksByISBN(String isbn) {
-		Connection con = null;
-		try {
-			con = DBCPConnectionPool.getDataSource().getConnection();
-			// con.setAutoCommit(false);
-		} catch (SQLException e) {
-			e.printStackTrace();
-		}
+		List<BookVO> list = null;
 		
-		BookDAO dao = new BookDAO(con);
-		ObservableList<BookVO> list = dao.selectByISBN(isbn);
+		SqlSessionFactory factory = MyBatisConnectionFactory.getSqlSessionFactory();
+		SqlSession session = factory.openSession();
+		
+		BookDAO dao = new BookDAO(session);
+		BookVO target = new BookVO();
+		target.setBisbn(isbn);
 		
 		try {
-			con.close();
-		} catch (SQLException e) {
+			list = dao.select(target);				
+		} catch (Exception e) {
 			e.printStackTrace();
+		} finally {
+			session.close();
 		}
 		
-		return list;
+		ObservableList<BookVO> obList = FXCollections.observableArrayList();
+		for (BookVO row : list) {
+			obList.add(row);
+		}
+		
+		return obList;
 	}
 
 	public ObservableList<BookVO> selectBooksByKeyword(String keyword) {
-		Connection con = null;
-		try {
-			con = DBCPConnectionPool.getDataSource().getConnection();
-			// con.setAutoCommit(false);
-		} catch (SQLException e) {
-			e.printStackTrace();
-		}
+		List<BookVO> list = null;
 		
-		BookDAO dao = new BookDAO(con);
-		ObservableList<BookVO> list = dao.selectByKeyword(keyword);
+		SqlSessionFactory factory = MyBatisConnectionFactory.getSqlSessionFactory();
+		SqlSession session = factory.openSession();
+		
+		BookDAO dao = new BookDAO(session);
+		BookVO target = new BookVO();
+		target.setBtitle(keyword);
 		
 		try {
-			con.close();
-		} catch (SQLException e) {
+			list = dao.select(target);				
+		} catch (Exception e) {
 			e.printStackTrace();
+		} finally {
+			session.close();
 		}
 		
-		return list;
+		ObservableList<BookVO> obList = FXCollections.observableArrayList();
+		for (BookVO row : list) {
+			obList.add(row);
+		}
+		
+		return obList;
 	}
 
 	public boolean insertNewBook(BookVO book) {
 		boolean result = false;
-		Connection con = null;
+		int affectedRows = 0;
+
+		SqlSessionFactory factory = MyBatisConnectionFactory.getSqlSessionFactory();
+		SqlSession session = factory.openSession();
+		
+		BookDAO dao = new BookDAO(session);
+		
 		try {
-			con = DBCPConnectionPool.getDataSource().getConnection();
-			con.setAutoCommit(false);
-		} catch (SQLException e) {
+			affectedRows = dao.insert(book);
+		} catch (Exception e) {
+			session.rollback();
+			session.close();
 			e.printStackTrace();
-		}
-		
-		BookDAO dao = new BookDAO(con);
-		int affectedRows = dao.insert(book);
-		
-		try {
+			result = false;
+		} finally {
 			if (affectedRows == 1) {
+				session.commit();
 				result = true;
-				con.commit();
 			} else {
+				session.rollback();
 				result = false;
-				con.rollback();
 			}
-			con.close();
-		} catch (SQLException e) {
-			e.printStackTrace();
+			session.close();
 		}
 		
 		return result;
 	}
 
-	public BookVO selectABookByISBN(String isbn) {
-		Connection con = null;
-		try {
-			con = DBCPConnectionPool.getDataSource().getConnection();
-		} catch (SQLException e) {
-			e.printStackTrace();
-		}
+	public BookVO selectOneBookByISBN(String isbn) {
+		BookVO book = null;
 		
-		BookDAO dao = new BookDAO(con);
-		BookVO book = dao.selectOneByISBN(isbn);
+		SqlSessionFactory factory = MyBatisConnectionFactory.getSqlSessionFactory();
+		SqlSession session = factory.openSession();
+		
+		BookDAO dao = new BookDAO(session);
+		
+		BookVO target = new BookVO();
+		target.setBisbn(isbn);
 		
 		try {
-			con.close();
-		} catch (SQLException e) {
+			book = dao.selectOne(target);			
+		} catch (Exception e) {
 			e.printStackTrace();
+		} finally {
+			session.close();
 		}
 		
 		return book;
@@ -103,28 +119,30 @@ public class BookService {
 
 	public boolean updateBook(BookVO book) {
 		boolean result = false;
-		Connection con = null;
+		int affectedRows = 0;
+		
+		SqlSessionFactory factory = MyBatisConnectionFactory.getSqlSessionFactory();
+		SqlSession session = factory.openSession();
+		
+		BookDAO dao = new BookDAO(session);
+		
 		try {
-			con = DBCPConnectionPool.getDataSource().getConnection();
-			con.setAutoCommit(false);
-		} catch (SQLException e) {
+			affectedRows = dao.update(book);			
+		} catch (Exception e) {
+			result = false;
+			session.rollback();
+			session.close();
 			e.printStackTrace();
-		}
-		
-		BookDAO dao = new BookDAO(con);
-		int affectedRows = dao.update(book);
-		
-		try {
+		} finally {
 			if (affectedRows == 1) {
 				result = true;
-				con.commit();
+				session.commit();
+				session.close();
 			} else {
 				result = false;
-				con.rollback();
+				session.rollback();
+				session.close();
 			}
-			con.close();
-		} catch (SQLException e) {
-			e.printStackTrace();
 		}
 		
 		return result;
@@ -132,28 +150,30 @@ public class BookService {
 
 	public boolean deleteBook(String isbn) {
 		boolean result = false;
-		Connection con = null;
+		int affectedRows = 0;
+		
+		SqlSessionFactory factory = MyBatisConnectionFactory.getSqlSessionFactory();
+		SqlSession session = factory.openSession();
+		
+		BookDAO dao = new BookDAO(session);
+		
 		try {
-			con = DBCPConnectionPool.getDataSource().getConnection();
-			con.setAutoCommit(false);
-		} catch (SQLException e) {
+			affectedRows = dao.delete(isbn);			
+		} catch (Exception e) {
+			result = false;
+			session.rollback();
+			session.close();
 			e.printStackTrace();
-		}
-		
-		BookDAO dao = new BookDAO(con);
-		int affectedRows = dao.delete(isbn);
-		
-		try {
+		} finally {
 			if (affectedRows == 1) {
 				result = true;
-				con.commit();
+				session.commit();
+				session.close();
 			} else {
 				result = false;
-				con.rollback();
+				session.rollback();
+				session.close();
 			}
-			con.close();
-		} catch (SQLException e) {
-			e.printStackTrace();
 		}
 		
 		return result;

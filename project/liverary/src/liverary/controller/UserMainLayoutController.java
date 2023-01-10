@@ -195,7 +195,7 @@ public class UserMainLayoutController implements Initializable {
 		msgBuff.append("딸림자료: " + selectedBook.getBsupplement() + "\n\n");
 		msgBuff.append("대출 가능 여부: " + selectedBook.getAvailable_kor() + "\n\n");
 		if (!selectedBook.isAvailable()) {
-			msgBuff.append("반납 예정일: " + selectedBook.getLduedate());
+			msgBuff.append("반납 예정일: " + selectedBook.getLdueDate());
 		}
 		
 		Alert alert = new Alert(AlertType.INFORMATION, msgBuff.toString());
@@ -208,8 +208,7 @@ public class UserMainLayoutController implements Initializable {
 	private void handleDetailLink() {
 		Parent modalRoot = null;
 		try {
-			FXMLLoader loader = new FXMLLoader(getClass().getResource("../view/userHistoryModalFXML.fxml"));
-			modalRoot = loader.load();
+			modalRoot = FXMLLoader.load(getClass().getResource("../view/userHistoryModalFXML.fxml"));
 		} catch (IOException e) {
 			e.printStackTrace();
 		}

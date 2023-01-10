@@ -166,9 +166,11 @@ public class RegisterStaffAccountLayoutController implements Initializable {
 			return;
 		}
 		
-		AccountVO newAccount = new AccountVO(name, birth, enteredDate, phone,
-												email, addr, department, 0, level, username, password);
-		
+		AccountVO newAccount = new AccountVO(name,
+				DateHelper.ConvertStrToLocalDate(birth),
+				DateHelper.ConvertStrToLocalDate(enteredDate),
+				phone, 	email, addr, department, 0, level, username, password);
+
 		AccountService service = new AccountService();
 		boolean success = service.insertNewAccount(newAccount);
 		

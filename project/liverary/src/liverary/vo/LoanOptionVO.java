@@ -2,9 +2,11 @@ package liverary.vo;
 
 import java.time.LocalDate;
 
-public class LoanVO {
+public class LoanOptionVO {
 	private int lno;
 	private LocalDate lcreatedAt;
+	private LocalDate lcreatedAtStart;
+	private LocalDate lcreatedAtEnd;
 	private LocalDate ldueDate;
 	private LocalDate lreturnedAt;
 	private String bisbn;
@@ -31,29 +33,19 @@ public class LoanVO {
 
 
 
-	public LoanVO() {
-	}
-
-	
-
-	public String getAvailable_kor() {
-		return available_kor;
-	}
-
-
-
-	public void setAvailable_kor(String available_kor) {
-		this.available_kor = available_kor;
+	public LoanOptionVO() {
 	}
 	
-
-
-	public LoanVO(int lno, LocalDate lcreatedAt, LocalDate ldueDate, LocalDate lreturnedAt, String bisbn, String btitle,
-			String bdate, int bpage, int bprice, String bauthor, String btranslator, String bsupplement,
-			String bpublisher, boolean available, int ano, String available_kor) {
+	
+	
+	public LoanOptionVO(int lno, LocalDate lcreatedAtStart, LocalDate lcreatedAtEnd, LocalDate ldueDate,
+			LocalDate lreturnedAt, String bisbn, String btitle, String bdate, int bpage, int bprice, String bauthor,
+			String btranslator, String bsupplement, String bpublisher, boolean available, int ano,
+			String available_kor) {
 		super();
 		this.lno = lno;
-		this.lcreatedAt = lcreatedAt;
+		this.lcreatedAtStart = lcreatedAtStart;
+		this.lcreatedAtEnd = lcreatedAtEnd;
 		this.ldueDate = ldueDate;
 		this.lreturnedAt = lreturnedAt;
 		this.bisbn = bisbn;
@@ -71,6 +63,19 @@ public class LoanVO {
 	}
 
 
+	
+	public String getAvailable_kor() {
+		return available_kor;
+	}
+
+
+
+	public void setAvailable_kor(String available_kor) {
+		this.available_kor = available_kor;
+	}
+	
+
+
 	public int getLno() {
 		return lno;
 	}
@@ -80,19 +85,6 @@ public class LoanVO {
 	public void setLno(int lno) {
 		this.lno = lno;
 	}
-
-
-
-	public LocalDate getLcreatedAt() {
-		return lcreatedAt;
-	}
-
-
-
-	public void setLcreatedAt(LocalDate lcreatedAt) {
-		this.lcreatedAt = lcreatedAt;
-	}
-
 
 
 	public LocalDate getLdueDate() {
@@ -236,4 +228,35 @@ public class LoanVO {
 	public void setAvailable(boolean available) {
 		this.available = available;
 	}
+
+
+	public LocalDate getLcreatedAtStart() {
+		return lcreatedAtStart;
+	}
+
+
+	public void setLcreatedAtStart(LocalDate lcreatedAtStart) {
+		this.lcreatedAtStart = lcreatedAtStart;
+	}
+
+
+	public LocalDate getLcreatedAtEnd() {
+		return lcreatedAtEnd;
+	}
+
+
+	public void setLcreatedAtEnd(LocalDate lcreatedAtEnd) {
+		this.lcreatedAtEnd = lcreatedAtEnd;
+	}
+
+
+	public LocalDate getLcreatedAt() {
+		return lcreatedAt;
+	}
+
+	
+	public void setLcreatedAt(LocalDate lcreatedAt) {
+		this.lcreatedAt = lcreatedAt;
+	}
+	
 }

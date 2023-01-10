@@ -19,6 +19,7 @@ import javafx.scene.control.TextField;
 import javafx.stage.Stage;
 import liverary.Globals;
 import liverary.service.AccountService;
+import liverary.util.DateHelper;
 import liverary.view.LayoutsEnum;
 import liverary.view.StageManager;
 import liverary.vo.AccountVO;
@@ -61,15 +62,13 @@ public class EditStaffAccountModalController implements Initializable {
 		AccountService service = new AccountService();
 		AccountVO account = service.selectAccountbyNO(ano);
 		
-		String[] birthStrArr = account.getAbirth().split("-");
-		String birthYear = birthStrArr[0];
-		String birthMonth = birthStrArr[1];
-		String birthDay = birthStrArr[2];
+		String birthYear = String.valueOf(account.getAbirth().getYear());
+		String birthMonth = String.valueOf(account.getAbirth().getMonthValue());
+		String birthDay = String.valueOf(account.getAbirth().getDayOfMonth());
 		
-		String[] enteredDateStrArr = account.getAcreatedAt().split("-");
-		String enterYear = enteredDateStrArr[0];
-		String enterMonth = enteredDateStrArr[1];
-		String enterDay = enteredDateStrArr[2];
+		String enterYear = String.valueOf(account.getAcreatedAt().getYear());
+		String enterMonth = String.valueOf(account.getAcreatedAt().getMonthValue());
+		String enterDay = String.valueOf(account.getAcreatedAt().getDayOfMonth());
 		
 		nameTextField.setText(account.getAname());
 		yearTextField.setText(birthYear);
@@ -143,8 +142,10 @@ public class EditStaffAccountModalController implements Initializable {
 			return;
 		}
 
-		AccountVO newAccount = new AccountVO(ano, name, department, birth, enteredDate, phone,
-												email, addr, point, level, username, password);
+		AccountVO newAccount = new AccountVO(ano, name, department,
+												DateHelper.ConvertStrToLocalDate(birth),
+												DateHelper.ConvertStrToLocalDate(enteredDate),
+												phone, email, addr, point, level, username, password);
 		
 		AccountService service = new AccountService();
 		boolean success = service.updateAccount(newAccount);

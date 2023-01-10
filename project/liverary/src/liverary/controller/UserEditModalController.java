@@ -1,6 +1,7 @@
 package liverary.controller;
 
 import java.net.URL;
+import java.time.LocalDate;
 import java.util.Optional;
 import java.util.ResourceBundle;
 
@@ -39,13 +40,12 @@ public class UserEditModalController implements Initializable {
 	
 	@Override
 	public void initialize(URL url, ResourceBundle bundle) {
-		String birthStr = Globals.getCurrentSessionBirth();
-		String[] birthStrArr = birthStr.split("-");
+		LocalDate birth = Globals.getCurrentSessionBirth();
 		
 		nameTextField.setText(Globals.getCurrentSessionName());
-		yearTextField.setText(birthStrArr[0]);
-		monthsTextField.setText(birthStrArr[1]);
-		dayTextField.setText(birthStrArr[2]);
+		yearTextField.setText(String.valueOf(birth.getYear()));
+		monthsTextField.setText(String.valueOf(birth.getMonthValue()));
+		dayTextField.setText(String.valueOf(birth.getDayOfMonth()));
 		phoneTextField.setText(Globals.getCurrentSessionPhone());
 		emailTextField.setText(Globals.getCurrentSessionEmail());
 		addrTextField.setText(Globals.getCurrentSessionAddr());

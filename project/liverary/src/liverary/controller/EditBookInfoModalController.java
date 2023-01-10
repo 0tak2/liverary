@@ -50,7 +50,7 @@ public class EditBookInfoModalController implements Initializable {
 	
 	public void getDataAndSetTableView(String targetISBN) {
 		BookService service = new BookService();
-		BookVO book = service.selectABookByISBN(targetISBN);
+		BookVO book = service.selectOneBookByISBN(targetISBN);
 		
 		String date = book.getBdate();
 		String year = date.split("년")[0];
@@ -129,7 +129,7 @@ public class EditBookInfoModalController implements Initializable {
 		
 		LoanService loanService = new LoanService();
 		ObservableList<LoanVO> list = loanService.selectRecentLoanRecordsByISBN(isbn);
-		if (!list.isEmpty()) {
+		if (list.size() == 1 && !list.get(0).isAvailable()) {
 			(new Alert(
 					AlertType.ERROR, "해당 자료에 대한 대출/반납 이력이 존재하여 삭제할 수 없습니다.")).showAndWait();
 			return;

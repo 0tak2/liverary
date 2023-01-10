@@ -45,12 +45,14 @@ public class Main extends Application {
 		
 		String pointPlusAmount_str = p.getProperty("point.plusAmount", "100");
 		String pointMinusAmount_str = p.getProperty("point.minusAmount", "100");
+		String loanDays_str = p.getProperty("loanService.loanDays", "7");
 		String maxLoanBooksAmount_str = p.getProperty("loanService.maxBookAmount", "5");
 		String nlApiSecret = p.getProperty("nlApi.secret", "");
 		String nlApiMaxItems_str = p.getProperty("nlApi.maxItems", "50");
 		
 		Globals.setPointPlusAmount(Integer.parseInt(pointPlusAmount_str));
 		Globals.setPointMinusAmount(Integer.parseInt(pointMinusAmount_str));
+		Globals.setLoanDays(Integer.parseInt(loanDays_str));
 		Globals.setMaxLoanBooksAmount(Integer.parseInt(maxLoanBooksAmount_str));
 		Globals.setNlApiSecret(nlApiSecret);
 		Globals.setNlApiMaxItems(Integer.parseInt(nlApiMaxItems_str));

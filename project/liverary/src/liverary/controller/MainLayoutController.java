@@ -82,7 +82,7 @@ public class MainLayoutController implements Initializable {
 		// 상단 위젯 초기화
 		// 왼쪽
 		todayLabel.setText(DateHelper.todayDateStr());
-		dueDateLabel.setText("반납예정일: " + DateHelper.AddDaysToTodayDateStr(7));
+		dueDateLabel.setText("반납예정일: " + String.valueOf(DateHelper.AddDaysToTodayDate(Globals.getLoanDays())));
 		// 오른쪽
 		greetingLabel.setText(Globals.getCurrentSessionName() + "(" + Globals.getCurrentSessionUsername() + ")님 반갑습니다.");
 		additionalInfoLabel.setText(Globals.getCurrentSessionDepartment() + " | 권한" + Globals.getCurrentSessionLevel());
@@ -221,6 +221,8 @@ public class MainLayoutController implements Initializable {
 		
 		if (selectedBook.isAvailable()) {		
 			selectedBook.setAno(selectedAccount.getAno());
+			selectedBook.setLcreatedAt(DateHelper.todayDate());
+			selectedBook.setLdueDate(DateHelper.AddDaysToTodayDate(Globals.getLoanDays()));
 			LoanService service = new LoanService();
 			int result = service.insertLoanRecord(selectedBook);
 			
@@ -271,7 +273,7 @@ public class MainLayoutController implements Initializable {
 			
 			String msg = "연체자료 알림\n\n"
 					+ "대상 자료: " + selectedBook.getBtitle() + "(" + selectedBook.getBisbn() + ")\n\n"
-					+ "정상 반납기일: " + selectedBook.getLduedate() + "\n\n"
+					+ "정상 반납기일: " + selectedBook.getLdueDate() + "\n\n"
 					+ "이용자: " + returnAccount.getAname() + "(" + returnAccount.getAbirth() + ")\n\n"
 					+ "포인트 감소: " + returnAccount.getApoint() + "->" + 
 											(returnAccount.getApoint() - Globals.getPointMinusAmount());
@@ -283,8 +285,6 @@ public class MainLayoutController implements Initializable {
 			} else if(result.get() == ButtonType.CANCEL) {
 				return;
 			}
-			
-		} else {
 			
 		}
 		
