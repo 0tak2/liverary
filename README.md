@@ -44,3 +44,9 @@ JavaFX를 이용한 소규모 도서관 시스템 구축 실습
   - 대출희망자료 검색 (기본뷰)
   - 대출 이력 확인
   - 회원 정보 수정 / 탈퇴
+
+### 이용 정책
+- 포인트가 0 미만인 이용자는 추가 대출할 수 없습니다.
+- 이용자는 자료를 반납 기일 내 정상 반납한 경우 소정의 포인트를 얻을 수 있습니다. ([preferences.properties](https://github.com/0tak2/liverary/blob/main/project/liverary/resources/preferences.properties.example))
+- 이용자는 연체 반납시 일정 포인트를 잃게 됩니다. ([preferences.properties](https://github.com/0tak2/liverary/blob/main/project/liverary/resources/preferences.properties.example))
+- 그 외에도 최대 대출 한도(최대로 동시에 빌릴 수 있는 자료의 개수)를 지정할 수 있습니다. ([preferences.properties](https://github.com/0tak2/liverary/blob/main/project/liverary/resources/preferences.properties.example))
