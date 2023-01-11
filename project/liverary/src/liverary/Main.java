@@ -50,6 +50,8 @@ public class Main extends Application {
 		String nlApiSecret = p.getProperty("nlApi.secret", "");
 		String nlApiMaxItems_str = p.getProperty("nlApi.maxItems", "50");
 		
+		System.out.println(pointMinusAmount_str);
+		
 		Globals.setPointPlusAmount(Integer.parseInt(pointPlusAmount_str));
 		Globals.setPointMinusAmount(Integer.parseInt(pointMinusAmount_str));
 		Globals.setLoanDays(Integer.parseInt(loanDays_str));
@@ -59,7 +61,7 @@ public class Main extends Application {
 	}
 	
 	public static void main(String[] args) {
-		initProperties("src/liverary/preferences.properties");
+		initProperties("resources/preferences.properties");
 		launch();
 	}
 }
