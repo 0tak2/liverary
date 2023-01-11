@@ -8,9 +8,7 @@ JavaFX를 이용한 소규모 도서관 시스템 구축 실습
 ## 빌드 환경
 - JDK 11.x
 - JavaFX 11.x
-- apache commons-dbcp2
-- apache commons-logging
-- apache commons-pool2
+- MyBatis 3.x
 - mysql-connector-j-8.0.31
 - retrofit2 (및 의존 라이브러리)
 
