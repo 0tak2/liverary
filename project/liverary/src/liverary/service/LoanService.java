@@ -2,6 +2,7 @@ package liverary.service;
 
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
@@ -238,6 +239,7 @@ public class LoanService {
 	public List<LoanVO> selectNoReturnedBookRowsByKeywordWithDates(String keyword, String startDateStr,
 			String endDateStr) {
 		List<LoanVO> list = null;
+		List<LoanVO> noReturnedList = new ArrayList<LoanVO>();
 		
 		LocalDate startDate = DateHelper.ConvertStrToLocalDate(startDateStr);
 		LocalDate endDate = DateHelper.ConvertStrToLocalDate(endDateStr);
@@ -261,16 +263,18 @@ public class LoanService {
 		
 		for (LoanVO row : list) {
 			if (!row.isAvailable()) {
-				row.setAvailable_kor("대출중");			
+				row.setAvailable_kor("대출중");		
+				noReturnedList.add(row);
 			}
 		}
 		
-		return list;
+		return noReturnedList;
 	}
 	
 	public List<LoanVO> selectNoReturnedBookRowsByISBNWithDates(String isbn, String startDateStr,
 			String endDateStr) {
 		List<LoanVO> list = null;
+		List<LoanVO> noReturnedList = new ArrayList<LoanVO>();
 		
 		LocalDate startDate = DateHelper.ConvertStrToLocalDate(startDateStr);
 		LocalDate endDate = DateHelper.ConvertStrToLocalDate(endDateStr);
@@ -294,11 +298,12 @@ public class LoanService {
 		
 		for (LoanVO row : list) {
 			if (!row.isAvailable()) {
-				row.setAvailable_kor("대출중");			
+				row.setAvailable_kor("대출중");		
+				noReturnedList.add(row);
 			}
 		}
 		
-		return list;
+		return noReturnedList;
 	}
 
 	public boolean getIsNeededPenalty(LoanVO row) {
