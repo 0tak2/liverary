@@ -121,6 +121,8 @@ public class GetDetailBookInfoLayoutController implements Initializable {
 			
 			return row;
 		});
+		
+		bookSearchBtn.fire();
 	}
 	
 	private void setDataToTableViewByKeyword() {

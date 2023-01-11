@@ -3,14 +3,10 @@ package liverary;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
-import java.sql.SQLException;
 import java.util.Properties;
-
-import org.apache.commons.dbcp2.BasicDataSource;
 
 import javafx.application.Application;
 import javafx.stage.Stage;
-import liverary.dao.DBCPConnectionPool;
 import liverary.view.LayoutsEnum;
 import liverary.view.StageManager;
 
@@ -18,15 +14,6 @@ public class Main extends Application {
 
 	@Override
 	public void start(Stage primaryStage) throws Exception {
-		primaryStage.setOnCloseRequest(e -> {
-			try {
-				((BasicDataSource)(DBCPConnectionPool.getDataSource())).close();
-				System.out.println("Connection pool closed");
-			} catch (SQLException e1) {
-				e1.printStackTrace();
-			}
-		});
-		
 		StageManager manager = StageManager.getInstance(primaryStage);
 		
 		manager.switchTo(LayoutsEnum.LoginLayout);

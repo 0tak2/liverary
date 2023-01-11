@@ -125,6 +125,7 @@ public class RecentLogLayoutController implements Initializable {
 	
 	private void setDataToTableViewByKeyword() {
 		LoanService service = new LoanService();
+		
 		List<LoanVO> list = service.selectLoanBookRowsByKeywordWithDates(
 				bookSearchKeywordTextField.getText(), startDate, endDate);
 		ObservableList<LoanVO> obList = FXCollections.observableArrayList(list);
