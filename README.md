@@ -1,5 +1,9 @@
 # 라이브' 러리 (live/rary)
 
+![로그인 화면](./docs/screenshot1.png)
+![관리자 화면](./docs/screenshot2.png)
+![유저 화면](./docs/screenshot3.png)
+
 JavaFX를 이용한 소규모 도서관 시스템 구축 실습
 
 [v0.2] MyBatis 적용  
@@ -13,13 +17,38 @@ JavaFX를 이용한 소규모 도서관 시스템 구축 실습
 - retrofit2 (및 의존 라이브러리)
 
 ## 빌드 인스트럭션
+
+### 요약
+
 1. MySQL [스크립트](./docs/base.sql) 실행
-2. 데이터베이스 [접속 정보](./project/liverary/src/liverary/dao/DBCPConnectionPool.java) 수정
+2. 데이터베이스 [접속 정보](./project/liverary/resources/driver.properties) 수정
 3. 빌드환경의 라이브러리를 모두 Build Path에 지정
 4. 빌드
 5. 기본 계정:
    - [사서] 아이디: admin 비밀번호: admin
    - [이용자] 아이디: limo 비밀번호: 980408
+
+### 자세히
+
+1. 도커로 MySQL을 띄우고 base.sql을 실행합니다.
+
+```
+liverary/docker # docker compose up
+```
+
+2. 이클립스로 프로젝트를 열고 오류가 없는지 확인합니다. 모듈 패스(JavaFX)와 빌드 패스(그 외 라이브러리)가 잘 잡혀있어야 합니다. 각 라이브러리는 [project/liverary/lib](./project/liverary/lib)에 있습니다.
+
+3. 데이터베이스 [접속 정보](./project/liverary/resources/driver.properties)를 수정합니다. 1번의 도커 컴포즈 스크립트를 그대로 사용하여 MySQL를 띄운 경우 수정하지 않아도 됩니다.
+
+4. 설정 파일 템플릿 ([preferences.properties.example](./project/liverary/resources/preferences.properties.example))을 preferences.properties라는 이름으로 복사하여 알맞게 수정합니다. 국립중앙도서관 OpenAPI 키는 [여기](https://www.nl.go.kr/NL/contents/N31101010000.do)에서 발급할 수 있습니다.
+
+5. 빌드 후 실행합니다. 실행시 JVM에 옵션을 지정해야 JavaFX 관련 모듈이 로드됩니다. 이클립스에서 Run Configurations를 열어 Arguments에 다음을 추가하세요. --module-path 값은 적절히 수정하세요.
+
+```
+--module-path "~/git/liverary/project/liverary/lib/openjfx-11.0.2_linux-x64_bin-sdk/javafx-sdk-11.0.2/lib" --add-modules javafx.controls,javafx.fxml
+```
+
+
 
 ## 시나리오
 이 어플리케이션의 사용자는 사서와 도서관 이용자로 나누어 집니다.

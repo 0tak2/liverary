@@ -39,7 +39,7 @@
 	</select>
 	<insert id="insert"
 		parameterType="Loan">
-		INSERT INTO loanrecordtbl(bisbn, ano, lcreatedAt, ldueDate, lreturnedAt)
+		INSERT INTO loanRecordTBL(bisbn, ano, lcreatedAt, ldueDate, lreturnedAt)
 		VALUES (#{bisbn}, #{ano}, #{lcreatedAt}, #{ldueDate}, null)
 	</insert>
 	<update id="update"

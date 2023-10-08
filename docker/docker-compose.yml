@@ -1,0 +1,17 @@
+version: '3'
+
+services:
+  database:
+    image: mysql:8.0.33
+    container_name: liverary_mysql
+    ports:
+      - 3305:3305
+    environment:
+      MYSQL_ROOT_PASSWORD: test1234
+      MYSQL_DATABASE: liverary
+    command:
+      - --character-set-server=utf8mb4
+      - --collation-server=utf8mb4_unicode_ci
+      - --port=3305
+    volumes:
+      - ./instance_data/mysql:/var/lib/mysql
